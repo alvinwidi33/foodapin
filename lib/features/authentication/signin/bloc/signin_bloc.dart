@@ -1,0 +1,47 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:foodapin/data/repositories/auth_repository/auth_repository.dart';
+import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
+import 'package:foodapin/features/authentication/signin/bloc/signin_event.dart';
+import 'package:foodapin/features/authentication/signin/bloc/signin_state.dart';
+
+class SignInBloc extends Bloc<SignInEvent, SignInState> {
+  final AuthRepository authRepository;
+  final UserRepository userRepository;
+
+  SignInBloc({
+    required this.authRepository,
+    required this.userRepository,
+  }) : super(SignInInitial()) {
+    on<SignInWithEmailEvent>(_onSignIn);
+    on<SignOutEvent>(_onSignOut);
+  }
+
+  Future<void> _onSignIn(
+    SignInWithEmailEvent event,
+    Emitter<SignInState> emit,
+  ) async {
+    emit(SignInLoading());
+
+    try {
+      await authRepository.signIn(
+        email: event.email,
+        password: event.password,
+      );
+
+      final user = await userRepository.getCurrentUser();
+      emit(SignInSuccess(user));
+    } catch (e) {
+      emit(SignInError(
+        'Email atau password salah',
+      ));
+    }
+  }
+
+  Future<void> _onSignOut(
+    SignOutEvent event,
+    Emitter<SignInState> emit,
+  ) async {
+    await authRepository.signOut();
+    emit(SignInInitial());
+  }
+}
