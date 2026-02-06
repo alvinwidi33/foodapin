@@ -42,7 +42,7 @@ class FoodRepositoryImpl implements FoodRepository {
 
   @override
   Future<Foods> updateFood(String id, Foods food) async {
-    final res = await dio.put(
+    final res = await dio.post(
       '/foods/$id',
       data: food.toJson(),
     );
