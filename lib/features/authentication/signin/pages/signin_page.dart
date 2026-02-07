@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
+import 'package:foodapin/features/authentication/signin/bloc/signin_event.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_state.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -27,7 +28,6 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return BlocListener<SignInBloc, SignInState>(
         listener: (context, state) {
@@ -59,24 +59,79 @@ class _SigninPageState extends State<SigninPage> {
                   width: MediaQuery.of(context).size.width * 0.84,
                   child: Column(
                     children: [
-                      Align(
-                          alignment: Alignment.topLeft,
+                      const SizedBox(height: 16),
+                      Container(
+                        key: const Key("email_input_text"),
+                        height: 56,
+                        decoration: AppTheme.inputContainerDecoration,
+                        child: TextField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppTheme.inputDecoration("Email"),
+                          textAlignVertical: TextAlignVertical.center,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      Container(
+                        key: const Key("password_input_text"),
+                        height: 56,
+                        decoration: AppTheme.inputContainerDecoration,
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: !isVisible,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: AppTheme.inputDecoration("Password").copyWith(
+                              errorMaxLines: 2,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isVisible = !isVisible;
+                                  });
+                                }, 
+                                icon: Icon(
+                                  isVisible ? Icons.visibility_off : Icons.visibility,
+                                ), style: ButtonStyle(iconColor: WidgetStateProperty.all(Colors.grey)),
+                              )
+                          ),
+                          textAlignVertical: TextAlignVertical.center,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Not a user yet?", style: AppTheme.subtitleDetail),
+                          SizedBox(width:4),
+                          GestureDetector(
+                            onTap: () => Navigator.pushReplacementNamed(context, '/signup'),
+                            child: Text(
+                              "Sign Up", 
+                              style: AppTheme.subtitleDetail.copyWith(
+                                color:AppTheme.primary
+                              )
+                            )
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 28),
+                      Container(
+                        decoration: AppTheme.buttonDecorationPrimary,
+                        child: ElevatedButton(
+                          key: const Key('signin_button'),
+                          onPressed: () {
+                            context.read<SignInBloc>().add(
+                              SignInWithEmailEvent(
+                                email: emailController.text.trim(), 
+                                password: passwordController.text.trim()
+                              )
+                            );
+                          },
                           child: Text(
-                            "Email",
-                            style: theme.textTheme.headlineSmall,
+                            "SIGN IN",
+                            style: AppTheme.buttonStyle,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Container(
-                          key: const Key('email_text_field'),
-                          decoration: AppTheme.inputContainerDecoration,
-                          clipBehavior: Clip.antiAlias,
-                          child: TextField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: AppTheme.inputDecoration("Email"),
-                          ),
-                        ),
+                      )
                     ],
                   )
                 )
