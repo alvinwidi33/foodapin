@@ -43,20 +43,24 @@ class AppTheme {
 
   static TextStyle buttonStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.bold,
-    fontSize: 20,
+    fontSize: 16,
     color: Colors.white,
   );
 
-  static InputDecoration inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      border: InputBorder.none,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 12,
-      ),
-    );
-  }
+static InputDecoration inputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+    border: InputBorder.none,
+    enabledBorder: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    filled: false, 
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 24,
+      vertical: 18,
+    ),
+  );
+}
+
 static BoxDecoration buttonDecorationDisabled = BoxDecoration(
   color: Colors.grey.shade300,
   borderRadius: BorderRadius.circular(20),
@@ -64,17 +68,17 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
 
   static BoxDecoration inputContainerDecoration = BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.circular(20),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withValues(alpha: 0.08),
-        blurRadius: 12,
-        offset: const Offset(0, 4),
-      ),
-    ],
+    borderRadius: BorderRadius.circular(28),
+    border : Border.all(
+      color: primary,
+      width: 2
+    )
   );
 
-
+  static BoxDecoration buttonDecorationPrimary = BoxDecoration(
+    color: primary,
+    borderRadius: BorderRadius.circular(28),
+  );
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -83,19 +87,6 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
         headlineSmall: headingStyle,
         bodyLarge: bodyStyle,
         labelLarge: buttonStyle,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.white,
-        border: InputBorder.none,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 12,
-        ),
-        labelStyle: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
