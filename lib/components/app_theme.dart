@@ -78,6 +78,7 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      scaffoldBackgroundColor: Colors.white,
       textTheme: TextTheme(
         headlineSmall: headingStyle,
         bodyLarge: bodyStyle,
@@ -111,3 +112,4 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
     );
   }
 }
+

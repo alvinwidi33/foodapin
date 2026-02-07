@@ -17,6 +17,22 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  # fallback color (kalau image gagal load)
+  color: "#FFFFFF"
+
+  # background gradient (image)
+  background_image: assets/Splash.png
+
+  image: assets/logo.png
+
+  android_12:
+    color: "#FFFFFF"
+    image: assets/logo.png
 
 environment:
   sdk: ^3.10.7
@@ -62,6 +78,7 @@ dev_dependencies:
   bloc_test: ^10.0.0
   mocktail: ^1.0.3
   firebase_auth_mocks: ^0.15.1
+  flutter_native_splash: ^2.3.5
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -84,8 +101,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
-    - assets/logo signin.svg
-    - assets/logo.svg
+    - assets/logo signin.png
+    - assets/Splash.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
