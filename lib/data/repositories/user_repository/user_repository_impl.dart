@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/users.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
 
@@ -8,43 +9,85 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this.dio);
 
   @override
-  Future<List<Users>> getAllUsers() async {
-    final res = await dio.get('/all-user');
-    final List list = res.data['data'];
-    return list
-        .map((e) => Users.fromJson(e))
-        .toList();
+  Future<ApiResponse<List<Users>>> getAllUsers() async {
+    try {
+      final res = await dio.get('/all-user');
+      final List list = res.data['data'];
+
+      final users = list
+          .map((e) => Users.fromJson(e))
+          .toList();
+
+      return ApiResponse.success(
+        users,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to fetch users',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (e) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<Users> getCurrentUser() async {
-    final res = await dio.get('/user');
-    return Users.fromJson(res.data['user']);
+  Future<ApiResponse<Users>> getCurrentUser() async {
+    try {
+      final res = await dio.get('/user');
+
+      return ApiResponse.success(
+        Users.fromJson(res.data['data']),
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to fetch user',
+      );
+    }
   }
 
   @override
-  Future<Users> updateProfile(Users user) async {
-    final res = await dio.put(
-      '/update-profile',
-      data: {
-        'name': user.name,
-        'email': user.email,
-        'phone_number': user.phoneNumber,
-        'profile_picture_url': user.profilePictureUrl,
-      },
-    );
+  Future<ApiResponse<Users>> updateProfile(Users user) async {
+    try {
+      final res = await dio.put(
+        '/update-profile',
+        data: {
+          'name': user.name,
+          'email': user.email,
+          'phone_number': user.phoneNumber,
+          'profile_picture_url': user.profilePictureUrl,
+        },
+      );
 
-    return Users.fromJson(res.data);
+      return ApiResponse.success(
+        Users.fromJson(res.data['data']),
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to update profile',
+      );
+    }
   }
 
   @override
-  Future<void> updateUserRole({
+  Future<ApiResponse<void>> updateUserRole({
     required String userId,
     required String role,
   }) async {
-    await dio.patch(
-      '/update-user-role/$userId',
-      data: {'role': role},
-    );
+    try {
+      await dio.put(
+        '/update-user-role/$userId',
+        data: {'role': role},
+      );
+
+      return ApiResponse.success(null);
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to update role',
+      );
+    }
   }
 }

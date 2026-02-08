@@ -22,19 +22,26 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   ) async {
     emit(SignInLoading());
 
-    try {
-      await authRepository.signIn(
-        email: event.email,
-        password: event.password,
-      );
+    final loginResult = await authRepository.signIn(
+    email: event.email,
+    password: event.password,
+  );
 
-      final user = await userRepository.getCurrentUser();
-      emit(SignInSuccess(user));
-    } catch (e) {
-      emit(SignInError(
-        'Email atau password salah',
-      ));
-    }
+  if (!loginResult.success) {
+    emit(SignInError(
+      loginResult.message ?? 'Email atau password salah',
+    ));
+    return;
+  }
+
+  final userResult = await userRepository.getCurrentUser();
+
+  if (!userResult.success || userResult.data == null) {
+    emit(SignInError(
+      userResult.message ?? 'Gagal mengambil data user',
+    ));
+    return;
+  }
   }
 
   Future<void> _onSignOut(

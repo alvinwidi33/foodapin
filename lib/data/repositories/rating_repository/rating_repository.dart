@@ -1,9 +1,10 @@
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/rating.dart';
 
 abstract class RatingRepository {
-  Future<List<FoodRating>> getRatingsByFood(String foodId);
+  Future<ApiResponse<List<FoodRating>>> getRatingsByFood(String foodId);
 
-  Future<void> createRating({
+  Future<ApiResponse<FoodRating>> createRating({
     required String foodId,
     required int rating,
     required String review,

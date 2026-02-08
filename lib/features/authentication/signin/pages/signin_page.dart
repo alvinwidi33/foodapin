@@ -36,9 +36,8 @@ class _SigninPageState extends State<SigninPage> {
             ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Hello ${state.user.name}. Welcome back!", style:AppTheme.bodyStyle)),
           );
-          if(state.user.role == 'Customer') Navigator.pushReplacementNamed(context, '/home');
-          else if(state.user.role == 'Admin') Navigator.pushReplacementNamed(context, '/dashboard');
-          else if(state.user.role == 'Toko') Navigator.pushReplacementNamed(context, '/toko');
+          if(state.user.role == 'user') Navigator.pushReplacementNamed(context, '/home');
+          else if(state.user.role == 'admin') Navigator.pushReplacementNamed(context, '/dashboard');
          } else if (state is SignInError) {
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
