@@ -1,12 +1,13 @@
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/foods.dart';
 
 abstract class FoodRepository {
-  Future<List<Foods>> getAllFoods();
-  Future<List<Foods>> getUserLikedFoods();
-  Future<Foods> getFoodById(String id);
-  Future<Foods> createFood(Foods food);
-  Future<Foods> updateFood(String id, Foods food);
-  Future<void> deleteFood(String id);
-  Future<void> likeFood(String id);
-  Future<void> unlikeFood(String id);
+  Future<ApiResponse<List<Foods>>> getAllFoods();
+  Future<ApiResponse<List<Foods>>> getUserLikedFoods();
+  Future<ApiResponse<Foods>> getFoodById(String id);
+  Future<ApiResponse<Foods>> createFood(Foods food);
+  Future<ApiResponse<Foods>> updateFood(String id, Foods food);
+  Future<ApiResponse<void>> deleteFood(String id);
+  Future<ApiResponse<Foods>> likeFood(String id);
+  Future<ApiResponse<Foods>> unlikeFood(String id);
 }

@@ -1,12 +1,13 @@
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/users.dart';
 
 abstract class AuthRepository {
-  Future<void> signIn({
+  Future<ApiResponse<Users>> signIn({
     required String email,
     required String password,
   });
 
-  Future<void> signUp({
+  Future<ApiResponse<Users>> signUp({
     required Users user,
   });
 

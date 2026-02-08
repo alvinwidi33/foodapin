@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/transaction.dart';
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository.dart';
 
@@ -8,86 +9,175 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl(this.dio);
 
   @override
-  Future<Transaction> getTransactionById(String id) async {
-    final res = await dio.get(
-      '/transaction/$id',
-    );
+  Future<ApiResponse<Transaction>> getTransactionById(String id) async {
+    try {
+      final res = await dio.get('/transaction/$id');
+      final transaction = Transaction.fromJson(res.data['data']);
 
-    return Transaction.fromJson(res.data['data']);
+      return ApiResponse.success(
+        transaction,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to fetch transaction',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<List<Transaction>> getMyTransactions() async {
-    final res = await dio.get(
-      '/my-transactions',
-    );
-    final List list = res.data['data'];
-    return list
-        .map((e) => Transaction.fromJson(e))
-        .toList();
+  Future<ApiResponse<List<Transaction>>> getMyTransactions() async {
+    try {
+      final res = await dio.get('/my-transactions');
+      final List list = res.data['data'];
+
+      final transactions = list
+          .map((e) => Transaction.fromJson(e))
+          .toList();
+
+      return ApiResponse.success(
+        transactions,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to fetch transactions',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<List<Transaction>> getAllTransactions() async {
-    final res = await dio.get(
-      '/all-transactions',
-    );
-    final List list = res.data['data'];
-    return list
-        .map((e) => Transaction.fromJson(e))
-        .toList();
+  Future<ApiResponse<List<Transaction>>> getAllTransactions() async {
+    try {
+      final res = await dio.get('/all-transactions');
+      final List list = res.data['data'];
+
+      final transactions = list
+          .map((e) => Transaction.fromJson(e))
+          .toList();
+
+      return ApiResponse.success(
+        transactions,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to fetch transactions',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<Transaction> createTransaction({
+  Future<ApiResponse<Transaction>> createTransaction({
     required List<String> cartIds,
     required String paymentMethodId,
   }) async {
-    final res = await dio.post(
-      '/create-transaction',
-      data: {
-        'cart_ids': cartIds,
-        'payment_method_id': paymentMethodId,
-      },
-    );
+    try {
+      final res = await dio.post(
+        '/create-transaction',
+        data: {
+          'cart_ids': cartIds,
+          'payment_method_id': paymentMethodId,
+        },
+      );
 
-    return Transaction.fromJson(res.data['data']);
+      final transaction = Transaction.fromJson(res.data['data']);
+
+      return ApiResponse.success(
+        transaction,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to create transaction',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<void> cancelTransaction(String id) async {
-    await dio.post(
-      '/cancel-transactions/$id',
-    );
+  Future<ApiResponse<void>> cancelTransaction(String id) async {
+    try {
+      final res = await dio.post('/cancel-transactions/$id');
+
+      return ApiResponse.success(
+        null,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to cancel transaction',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<Transaction> uploadProofPayment({
+  Future<ApiResponse<Transaction>> uploadProofPayment({
     required String transactionId,
     required String proofPaymentUrl,
   }) async {
-    final response = await dio.post(
-      '/update-transaction-proof-payment/$transactionId',
-      data: {
-        'proof_payment_url': proofPaymentUrl,
-      },
-    );
+    try {
+      final res = await dio.post(
+        '/update-transaction-proof-payment/$transactionId',
+        data: {
+          'proof_payment_url': proofPaymentUrl,
+        },
+      );
 
-    return Transaction.fromJson(response.data['data']);
+      final transaction = Transaction.fromJson(res.data['data']);
+
+      return ApiResponse.success(
+        transaction,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to upload proof payment',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 
   @override
-  Future<Transaction> updateTransactionStatus({
+  Future<ApiResponse<Transaction>> updateTransactionStatus({
     required String transactionId,
     required String status,
   }) async {
-    final response = await dio.patch(
-      '/update-transaction-status/$transactionId',
-      data: {
-        'status': status,
-      },
-    );
+    try {
+      final res = await dio.patch(
+        '/update-transaction-status/$transactionId',
+        data: {'status': status},
+      );
 
-    return Transaction.fromJson(response.data['data']);
+      final transaction = Transaction.fromJson(res.data['data']);
+
+      return ApiResponse.success(
+        transaction,
+        statusCode: res.statusCode,
+      );
+    } on DioException catch (e) {
+      return ApiResponse.error(
+        e.response?.data['message'] ?? 'Failed to update transaction status',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      return ApiResponse.error('Unexpected error');
+    }
   }
 }

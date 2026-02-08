@@ -1,8 +1,9 @@
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/cart.dart';
 
 abstract class CartRepository {
-  Future<List<Cart>> getAllCarts();
-  Future<void> addToCart(String foodId);
-  Future<void> updateCartQuantity({required String id, required int quantity});
-  Future<void> deleteCart(String id);
+  Future<ApiResponse<List<Cart>>> getAllCarts();
+  Future<ApiResponse<Cart>> addToCart(String foodId);
+  Future<ApiResponse<Cart>> updateCartQuantity({required String id, required int quantity});
+  Future<ApiResponse<void>> deleteCart(String id);
 }

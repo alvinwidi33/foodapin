@@ -1,10 +1,11 @@
+import 'package:foodapin/core/base/api_response.dart';
 import 'package:foodapin/data/models/users.dart';
 
 abstract class UserRepository {
-  Future<List<Users>> getAllUsers();
-  Future<Users> getCurrentUser();
-  Future<Users> updateProfile(Users user);
-  Future<void> updateUserRole({
+  Future<ApiResponse<List<Users>>> getAllUsers();
+  Future<ApiResponse<Users>> getCurrentUser();
+  Future<ApiResponse<Users>> updateProfile(Users user);
+  Future<ApiResponse<void>> updateUserRole({
     required String userId,
     required String role,
   });
