@@ -21,29 +21,22 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async {
     emit(SignUpLoading());
 
-    try {
-      final user = Users(
-        id: event.id,
-        name: event.name,
-        email: event.email,
-        password: event.password,
-        passwordRepeat: event.passwordRepeat,
-        role: event.role,
-        phoneNumber: event.phoneNumber,
-        profilePictureUrl: '',
-      );
+    final user = Users(
+      name: event.name,
+      email: event.email,
+      password: event.password,
+      passwordRepeat: event.passwordRepeat,
+      role: event.role,
+      phoneNumber: event.phoneNumber,
+      profilePictureUrl: '',
+    );
 
-      await authRepository.signUp(user: user);
+    final result = await authRepository.signUp(user: user);
 
-      emit(SignUpSuccess(user));
-    } on DioException catch (e) {
-      emit(
-        SignUpError(
-          e.response?.data['message'] ?? 'Signup gagal',
-        ),
-      );
-    } catch (e) {
-      emit(SignUpError('Terjadi kesalahan'));
+    if (result.success) {
+      emit(SignUpSuccess(result.data!));
+    } else {
+      emit(SignUpError(result.message ?? 'Signup failed'));
     }
   }
 

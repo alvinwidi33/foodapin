@@ -26,21 +26,28 @@ class AuthRepositoryImpl implements AuthRepository {
           'password': password,
         },
       );
-      final user = Users.fromJson(response.data['data']);
       final token = response.data['access_token'];
       await tokenStorage.save(token);
 
       return ApiResponse.success(
-        user,
+        Users.fromJson(response.data['data']),
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
-      return ApiResponse.error(
-        e.response?.data['message'] ?? 'Login gagal',
-        statusCode: e.response?.statusCode,
-      );
+        final data = e.response?.data;
+
+        String message = 'Failed registering user';
+
+        if (data is Map && data['errors'] is List && data['errors'].isNotEmpty) {
+          message = data['errors'][0]['message'] ?? message;
+        }
+
+        return ApiResponse.error(
+          message,
+          statusCode: e.response?.statusCode,
+        );
     } catch (_) {
-      return ApiResponse.error('Terjadi kesalahan');
+      return ApiResponse.error('Something went wrong');
     }
   }
 
@@ -54,16 +61,24 @@ class AuthRepositoryImpl implements AuthRepository {
         data: user.toJson(includePassword: true),
       );
       return ApiResponse.success(
-        user,
+        Users.fromJson(response.data['data']),
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
+      final data = e.response?.data;
+
+      String message = 'Failed registering user';
+
+      if (data is Map && data['errors'] is List && data['errors'].isNotEmpty) {
+        message = data['errors'][0]['message'] ?? message;
+      }
+
       return ApiResponse.error(
-        e.response?.data['message'] ?? 'Register gagal',
+        message,
         statusCode: e.response?.statusCode,
       );
     } catch (_) {
-      return ApiResponse.error('Terjadi kesalahan');
+      return ApiResponse.error('Something went wrong');
     }
   }
 

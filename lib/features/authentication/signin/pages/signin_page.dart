@@ -4,7 +4,6 @@ import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_event.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_state.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -15,17 +14,22 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   bool isVisible = false;
-
+  bool isPasswordValid = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   
   @override
-    void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-    }
+  void dispose() {
+  emailController.dispose();
+  passwordController.dispose();
+  super.dispose();
+  }
 
+  bool _isPasswordValid(String value) {
+    final password = passwordController.text;
+    final hasMinLength = password.length >= 6;
+    return hasMinLength;
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -70,16 +74,21 @@ class _SigninPageState extends State<SigninPage> {
                           textAlignVertical: TextAlignVertical.center,
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 16),
                       Container(
                         key: const Key("password_input_text"),
-                        height: 56,
                         decoration: AppTheme.inputContainerDecoration,
                         child: TextField(
                           controller: passwordController,
                           obscureText: !isVisible,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
+                          onChanged: (value) {
+                            setState(() {
+                              isPasswordValid = _isPasswordValid(value.trim());
+                            });
+                          },
                           decoration: AppTheme.inputDecoration("Password").copyWith(
+                            errorText: isPasswordValid ? null : 'Password should be 6 characters or more',
                               errorMaxLines: 2,
                               suffixIcon: IconButton(
                                 onPressed: () {
@@ -130,10 +139,11 @@ class _SigninPageState extends State<SigninPage> {
                             style: AppTheme.buttonStyle,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   )
-                )
+                ),
+                const SizedBox(height: 20)
               ],
             ),
             )

@@ -1,5 +1,5 @@
 class Users {
-  final String id;
+  final String? id;
   final String name;
   final String email;
   final String password;       
@@ -9,7 +9,7 @@ class Users {
   final String phoneNumber;
 
   Users({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
     required this.password,
@@ -21,7 +21,7 @@ class Users {
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
-      id: json['id'],
+      id: json['id']?.toString(),
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       password: '',      
@@ -32,11 +32,8 @@ class Users {
     );
   }
 
-  Map<String, dynamic> toJson({
-    bool includePassword = false,
-  }) {
+  Map<String, dynamic> toJson({bool includePassword = false}) {
     final data = <String, dynamic>{
-      'id':id,
       'name': name,
       'email': email,
       'phone_number': phoneNumber,
@@ -44,9 +41,13 @@ class Users {
       'role': role,
     };
 
+    if (id != null) {
+      data['id'] = id;
+    }
+
     if (includePassword) {
       data['password'] = password;
-      data['password_repeat'] = passwordRepeat;
+      data['passwordRepeat'] = passwordRepeat;
     }
 
     return data;

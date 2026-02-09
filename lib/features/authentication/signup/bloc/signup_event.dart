@@ -8,7 +8,6 @@ abstract class SignUpEvent extends Equatable {
 }
 
 class SignUpWithEmailEvent extends SignUpEvent {
-  final String id;
   final String name;
   final String email;
   final String password;
@@ -16,7 +15,7 @@ class SignUpWithEmailEvent extends SignUpEvent {
   final String phoneNumber;
   final String role;
 
-  const SignUpWithEmailEvent({required this.id, required this.name, required this.email, required this.password, required this.passwordRepeat, required this.role, required this.phoneNumber});
+  const SignUpWithEmailEvent({required this.name, required this.email, required this.password, required this.passwordRepeat, required this.role, required this.phoneNumber});
 
   @override
   List<Object?> get props => [name, email, password, passwordRepeat, role];
