@@ -38,7 +38,7 @@ class UserRepositoryImpl implements UserRepository {
       final res = await dio.get('/user');
 
       return ApiResponse.success(
-        Users.fromJson(res.data['data']),
+        Users.fromJson(res.data['user']),
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {
