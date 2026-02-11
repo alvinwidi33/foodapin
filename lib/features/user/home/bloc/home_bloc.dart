@@ -102,11 +102,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         sorted.sort((a, b) => b.name.compareTo(a.name));
         break;
       case 'price_asc':
-        sorted.sort((a, b) => a.price.compareTo(b.price));
+        sorted.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
         break;
+
       case 'price_desc':
-        sorted.sort((a, b) => b.price.compareTo(a.price));
+        sorted.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
         break;
+
     }
 
     emit(current.copyWith(

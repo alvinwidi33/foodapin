@@ -4,7 +4,7 @@ class Foods {
   final String description;
   final String imageUrl;
   final List<String> ingredients;
-  final int price;
+  final int? price;
   final int? priceDiscount;
   final int? rating;
   final int? totalLikes;
@@ -18,7 +18,7 @@ class Foods {
     required this.description,
     required this.imageUrl,
     required this.ingredients,
-    required this.price,
+    this.price,
     this.priceDiscount,
     this.rating,
     this.totalLikes,
@@ -34,15 +34,23 @@ class Foods {
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       ingredients: List<String>.from(json['ingredients'] ?? []),
-      price: json['price'] ?? 0,
-      priceDiscount: json['price_discount'] ?? 0,
-      rating: json['rating'] ?? 0,
-      totalLikes: json['total_likes'] ?? 0,
-      isLike: json['is_like'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+
+      price: json['price'],
+      priceDiscount: json['priceDiscount'],
+      rating: json['rating'],
+      totalLikes: json['totalLikes'],       
+      isLike: json['isLike'],            
+
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),               
+
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {
