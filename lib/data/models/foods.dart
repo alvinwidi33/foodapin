@@ -1,35 +1,35 @@
 class Foods {
-  final String id;
+  final String? id;
   final String name;
   final String description;
   final String imageUrl;
   final List<String> ingredients;
   final int price;
-  final int priceDiscount;
-  final int rating;
-  final int totalLikes;
-  final bool isLike;
+  final int? priceDiscount;
+  final int? rating;
+  final int? totalLikes;
+  final bool? isLike;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   Foods({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.imageUrl,
     required this.ingredients,
     required this.price,
-    required this.priceDiscount,
-    required this.rating,
-    required this.totalLikes,
-    required this.isLike,
+    this.priceDiscount,
+    this.rating,
+    this.totalLikes,
+    this.isLike,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory Foods.fromJson(Map<String, dynamic> json) {
     return Foods(
-      id: json['id'],
+      id: json['id']?.toString(),
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',

@@ -68,6 +68,7 @@ class _SignupPageState extends State<SignupPage> {
         }
       },
       child: Scaffold(
+        backgroundColor: AppTheme.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(

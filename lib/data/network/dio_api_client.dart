@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:foodapin/data/network/auth_interceptor.dart';
+import 'package:foodapin/data/network/token_storage.dart';
 
 class DioApiClient {
   static final DioApiClient _instance = DioApiClient._internal();
@@ -26,7 +28,7 @@ class DioApiClient {
         },
       ),
     );
-
+    _dio.interceptors.add(AuthInterceptor(TokenStorage()));
     _dio.interceptors.add(
       LogInterceptor(
         request: true,

@@ -26,11 +26,11 @@ class AuthRepositoryImpl implements AuthRepository {
           'password': password,
         },
       );
-      final token = response.data['access_token'];
+      final token = response.data['token'];
       await tokenStorage.save(token);
 
       return ApiResponse.success(
-        Users.fromJson(response.data['data']),
+        Users.fromJson(response.data['user']),
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
@@ -61,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
         data: user.toJson(includePassword: true),
       );
       return ApiResponse.success(
-        Users.fromJson(response.data['data']),
+        Users.fromJson(response.data['user']),
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {

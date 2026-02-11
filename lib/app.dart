@@ -13,6 +13,7 @@ import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:foodapin/features/authentication/signup/bloc/signup_bloc.dart';
+import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
@@ -60,6 +61,11 @@ Widget build(BuildContext context) {
               create: (_) => SignUpBloc(
                 authRepository: authRepository,
                 userRepository: userRepository,
+              ),
+            ),
+            BlocProvider(
+              create: (_) => HomeBloc(
+                foodRepository: foodRepository
               ),
             ),
           ],

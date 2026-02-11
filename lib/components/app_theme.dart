@@ -9,6 +9,7 @@ class AppTheme {
   static const Color fourtenary = Color(0xFFFEF2DC);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color screen = Color(0xFFF4F5F9);
   
   static const LinearGradient backgroundSplash = LinearGradient(
     colors: [primary, secondary],
@@ -44,7 +45,7 @@ class AppTheme {
   static TextStyle buttonStyle = GoogleFonts.poppins(
     fontWeight: FontWeight.bold,
     fontSize: 16,
-    color: Colors.white,
+    color: white,
   );
 
 static InputDecoration inputDecoration(String hint) {
@@ -67,7 +68,7 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
 );
 
   static BoxDecoration inputContainerDecoration = BoxDecoration(
-    color: Colors.white,
+    color: white,
     borderRadius: BorderRadius.circular(28),
     border : Border.all(
       color: primary,
@@ -82,7 +83,7 @@ static BoxDecoration buttonDecorationDisabled = BoxDecoration(
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: screen,
       textTheme: TextTheme(
         headlineSmall: headingStyle,
         bodyLarge: bodyStyle,

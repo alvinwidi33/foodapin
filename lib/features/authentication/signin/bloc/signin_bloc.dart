@@ -42,6 +42,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     ));
     return;
   }
+  emit(SignInSuccess(userResult.data!));
   }
 
   Future<void> _onSignOut(
