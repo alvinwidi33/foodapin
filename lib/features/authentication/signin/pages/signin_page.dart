@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
+import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_event.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_state.dart';
@@ -37,6 +38,7 @@ class _SigninPageState extends State<SigninPage> {
         listener: (context, state) {
           if (state is SignInLoading) {
          } else if(state is SignInSuccess){
+          context.read<AuthCubit>().setAuthenticated();
             ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Hello ${state.user.name}. Welcome back!", style:AppTheme.bodyStyle)),
           );
