@@ -74,7 +74,7 @@ Widget build(BuildContext context) {
             theme: AppTheme.lightTheme,
             initialRoute: '/signin',
             onGenerateRoute:
-                AppRoutes(authState.status).onGenerateRoute,
+                AppRoutes(authState).onGenerateRoute,
           ),
         ),
       );

@@ -37,14 +37,19 @@ class _SigninPageState extends State<SigninPage> {
     return BlocListener<SignInBloc, SignInState>(
         listener: (context, state) {
           if (state is SignInLoading) {
-         } else if(state is SignInSuccess){
-          context.read<AuthCubit>().setAuthenticated();
+         } if(state is SignInSuccess){
+          context.read<AuthCubit>().setAuthenticated(
+            state.user.role.toLowerCase(),
+          );
             ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Hello ${state.user.name}. Welcome back!", style:AppTheme.bodyStyle)),
           );
-         if(state.user.role == 'user') Navigator.pushReplacementNamed(context, '/home');
-          else if(state.user.role == 'admin') Navigator.pushReplacementNamed(context, '/dashboard');
-         } else if (state is SignInError) {
+            if (state.user.role.toLowerCase() == 'admin') {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            } else {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+          } else if (state is SignInError) {
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
             );

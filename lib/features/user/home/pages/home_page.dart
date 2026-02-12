@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
+import 'package:foodapin/components/navbar.dart';
 import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
 import 'package:foodapin/features/user/home/bloc/home_event.dart';
 import 'package:foodapin/features/user/home/bloc/home_state.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+   final int _currentIndex = 0;
 
   @override
   void initState() {
@@ -126,7 +128,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Content area
                 Expanded(
                   child: BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
@@ -224,9 +225,9 @@ class _HomePageState extends State<HomePage> {
                                               topLeft: Radius.circular(16),
                                               topRight: Radius.circular(16),
                                             ),
-                                            child: food.imageUrl != null && food.imageUrl!.isNotEmpty
+                                            child: food.imageUrl.isNotEmpty
                                                 ? Image.network(
-                                                    food.imageUrl!,
+                                                    food.imageUrl,
                                                     fit: BoxFit.cover,
                                                     errorBuilder: (context, error, stackTrace) {
                                                       return const Center(
@@ -279,6 +280,12 @@ class _HomePageState extends State<HomePage> {
                                                 size: 18,
                                               ),
                                               onPressed: () {
+                                                context.read<HomeBloc>().add(
+                                                  ToggleLikeFood(
+                                                    foodId: food.id.toString(),
+                                                    isCurrentlyLiked: food.isLike ?? false,
+                                                  ),
+                                                );
                                               },
                                             ),
                                           ),
@@ -380,15 +387,32 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }
-                      
                       return const SizedBox();
                     },
                   ),
+                
                 ),
               ],
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child:CurvedBottomNavBar(
+          currentIndex: _currentIndex, 
+          onTap: (index){
+            if (index == _currentIndex) return;
+            if (index == 0) {
+              Navigator.pushReplacementNamed(context, '/home');
+            } else if (index == 1) {
+              Navigator.pushReplacementNamed(context, '/my-orders');
+            } else if (index == 2) {
+              Navigator.pushReplacementNamed(context, '/my-likes');
+            } else if (index == 3) {
+              Navigator.pushReplacementNamed(context, '/profile');
+            }
+          }
+        ) ,
       ),
     );
   }
