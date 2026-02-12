@@ -17,6 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SearchFoods>(_onSearchFoods);
     on<SortFoods>(_onSortFoods);
     on<ClearSearchAndSort>(_onClearSearchAndSort);
+    on<ToggleLikeFood>(_onToggleLikeFood);
   }
 
   Future<void> _onFetchFoods(
@@ -132,4 +133,47 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       clearSort: true,
     ));
   }
+  Future<void> _onToggleLikeFood(
+  ToggleLikeFood event,
+  Emitter<HomeState> emit,
+) async {
+  if (state is! HomeLoaded) return;
+
+  final current = state as HomeLoaded;
+
+  // Optimistic update dulu
+  final updatedAllFoods = current.allFoods.map((food) {
+    if (food.id.toString() == event.foodId) {
+      return food.copyWith(
+        isLike: !event.isCurrentlyLiked,
+      );
+    }
+    return food;
+  }).toList();
+
+  final updatedVisibleFoods = current.visibleFoods.map((food) {
+    if (food.id.toString() == event.foodId) {
+      return food.copyWith(
+        isLike: !event.isCurrentlyLiked,
+      );
+    }
+    return food;
+  }).toList();
+
+  emit(current.copyWith(
+    allFoods: updatedAllFoods,
+    visibleFoods: updatedVisibleFoods,
+  ));
+
+  // Panggil API tapi jangan emit HomeError
+  try {
+    if (event.isCurrentlyLiked) {
+      await foodRepository.unlikeFood(event.foodId);
+    } else {
+      await foodRepository.likeFood(event.foodId);
+    }
+  } catch (e) {
+    // optional: rollback kalau API gagal
+  }
+}
 }

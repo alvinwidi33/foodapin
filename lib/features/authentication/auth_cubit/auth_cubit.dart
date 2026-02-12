@@ -6,14 +6,14 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository authRepository;
 
   AuthCubit(this.authRepository)
-      : super(const AuthState(AuthStatus.initial));
+      : super(const AuthState(status: AuthStatus.initial));
 
   Future<void> checkAuth() async {
     final isLoggedIn = await authRepository.isLoggedIn();
 
     emit(
       AuthState(
-        isLoggedIn
+        status: isLoggedIn
             ? AuthStatus.authenticated
             : AuthStatus.unauthenticated,
       ),
@@ -22,10 +22,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     await authRepository.signOut();
-    emit(const AuthState(AuthStatus.unauthenticated));
-  }
-  void setAuthenticated() {
-    emit(const AuthState(AuthStatus.authenticated));
+    emit(const AuthState(status: AuthStatus.unauthenticated));
   }
 
+  void setAuthenticated(String role) {
+    emit(
+      AuthState(
+        status: AuthStatus.authenticated,
+        role: role,
+      ),
+    );
+  }
 }

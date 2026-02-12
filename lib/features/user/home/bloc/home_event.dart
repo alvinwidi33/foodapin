@@ -41,3 +41,12 @@ class SortFoods extends HomeEvent {
 class ClearSearchAndSort extends HomeEvent {
   const ClearSearchAndSort();
 }
+class ToggleLikeFood extends HomeEvent {
+  final String foodId;
+  final bool isCurrentlyLiked;
+
+  const ToggleLikeFood({
+    required this.foodId,
+    required this.isCurrentlyLiked,
+  });
+}

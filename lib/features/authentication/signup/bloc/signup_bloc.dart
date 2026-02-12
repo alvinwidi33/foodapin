@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/data/models/users.dart';
 import 'package:foodapin/data/repositories/auth_repository/auth_repository.dart';

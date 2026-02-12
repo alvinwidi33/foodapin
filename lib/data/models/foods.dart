@@ -51,7 +51,6 @@ class Foods {
     );
   }
 
-
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -62,4 +61,34 @@ class Foods {
       'price_discount': priceDiscount,
     };
   }
+  Foods copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? imageUrl,
+    List<String>? ingredients,
+    int? price,
+    int? priceDiscount,
+    int? rating,
+    int? totalLikes,
+    bool? isLike,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Foods(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ingredients: ingredients ?? this.ingredients,
+      price: price ?? this.price,
+      priceDiscount: priceDiscount ?? this.priceDiscount,
+      rating: rating ?? this.rating,
+      totalLikes: totalLikes ?? this.totalLikes,
+      isLike: isLike ?? this.isLike,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
 }

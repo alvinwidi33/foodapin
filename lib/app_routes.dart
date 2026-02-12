@@ -5,9 +5,9 @@ import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
 
 class AppRoutes {
-  final AuthStatus authStatus;
+  final AuthState authState;
 
-  AppRoutes(this.authStatus);
+  AppRoutes(this.authState);
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     const publicRoutes = [
@@ -15,7 +15,8 @@ class AppRoutes {
       '/signup',
     ];
 
-    if (authStatus == AuthStatus.unauthenticated &&
+    // Kalau belum login dan akses halaman private
+    if (authState.status == AuthStatus.unauthenticated &&
         !publicRoutes.contains(settings.name)) {
       return MaterialPageRoute(
         builder: (_) => const SigninPage(),
@@ -24,19 +25,16 @@ class AppRoutes {
 
     switch (settings.name) {
       case '/signin':
-        return MaterialPageRoute(
-          builder: (_) => const SigninPage(),
-        );
+        return MaterialPageRoute(builder: (_) => const SigninPage());
 
       case '/signup':
-        return MaterialPageRoute(
-          builder: (_) => const SignupPage(),
-        );
+        return MaterialPageRoute(builder: (_) => const SignupPage());
 
-      case '/home': 
-        return MaterialPageRoute(
-          builder: (_) => const HomePage(),
-        );
+      case '/home':
+        return MaterialPageRoute(builder: (_) => const HomePage());
+
+      // case '/dashboard':
+      //   return MaterialPageRoute(builder: (_) => const DashboardPage());
 
       default:
         return MaterialPageRoute(
