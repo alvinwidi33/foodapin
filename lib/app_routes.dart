@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
+import 'package:foodapin/features/user/detail-food/page/detail_food_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
-
 class AppRoutes {
   final AuthState authState;
 
@@ -15,14 +15,20 @@ class AppRoutes {
       '/signup',
     ];
 
-    // Kalau belum login dan akses halaman private
-    if (authState.status == AuthStatus.unauthenticated &&
-        !publicRoutes.contains(settings.name)) {
+    if (authState.status == AuthStatus.unauthenticated && !publicRoutes.contains(settings.name)) {
       return MaterialPageRoute(
         builder: (_) => const SigninPage(),
       );
     }
-
+ if (authState.status == AuthStatus.authenticated) {
+    if (settings.name == '/signin' || settings.name == '/signup') {
+      if (authState.role == 'admin') {
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      } else {
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      }
+    }
+  }
     switch (settings.name) {
       case '/signin':
         return MaterialPageRoute(builder: (_) => const SigninPage());
@@ -33,8 +39,8 @@ class AppRoutes {
       case '/home':
         return MaterialPageRoute(builder: (_) => const HomePage());
 
-      // case '/dashboard':
-      //   return MaterialPageRoute(builder: (_) => const DashboardPage());
+      case '/detail-food':
+        return MaterialPageRoute(builder: (_) => const DetailFoodPage(), settings: settings);
 
       default:
         return MaterialPageRoute(

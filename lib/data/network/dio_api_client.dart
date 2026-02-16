@@ -23,9 +23,7 @@ class DioApiClient {
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',
         },
-        validateStatus: (status) {
-          return status != null && status >= 200 && status < 400;
-        },
+        validateStatus: (status) => true,
       ),
     );
     _dio.interceptors.add(AuthInterceptor(TokenStorage()));

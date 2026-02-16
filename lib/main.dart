@@ -27,10 +27,10 @@ void main() async {
     dio: dioClient.dio,
     tokenStorage: tokenStorage,
   );
-
+  final userRepository = UserRepositoryImpl(dioClient.dio);
   runApp(
     BlocProvider(
-      create: (_) => AuthCubit(authRepository)..checkAuth(),
+      create: (_) => AuthCubit(authRepository, userRepository)..checkAuth(),
       child: MyApp(
         authRepository: authRepository,
         userRepository: UserRepositoryImpl(dioClient.dio),

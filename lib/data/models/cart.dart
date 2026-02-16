@@ -21,12 +21,18 @@ class Cart {
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
-      id: json['id'],
-      userId: json['user_id'],
-      foodId: json['food_id'],
+      id: json['id']?.toString() ?? '',
+      // ✅ Support both userId and user_id
+      userId: json['userId']?.toString() ?? json['user_id']?.toString() ?? '',
+      // ✅ Support both foodId and food_id
+      foodId: json['foodId']?.toString() ?? json['food_id']?.toString() ?? '',
       quantity: json['quantity'] ?? 0,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
       food: json['food'] != null
           ? Foods.fromJson(json['food'])
           : null,
