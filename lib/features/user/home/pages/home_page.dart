@@ -193,153 +193,166 @@ class _HomePageState extends State<HomePage> {
                               
                               final food = state.visibleFoods[index];
                               
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: AppTheme.white,
+                              return Material(
+                                color: Colors.transparent,
+                                child: InkWell(
                                   borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha:0.08),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/detail-food', 
+                                        arguments: food.id,
+                                      );
+                                    },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha:0.08),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Stack(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          height: 120,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.tertiary,
-                                            borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(16),
-                                              topRight: Radius.circular(16),
-                                            ),
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(16),
-                                              topRight: Radius.circular(16),
-                                            ),
-                                            child: food.imageUrl.isNotEmpty
-                                                ? Image.network(
-                                                    food.imageUrl,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return const Center(
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: AppTheme.tertiary,
+                                                borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(16),
+                                                  topRight: Radius.circular(16),
+                                                ),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(16),
+                                                  topRight: Radius.circular(16),
+                                                ),
+                                                child: food.imageUrl.isNotEmpty
+                                                    ? Image.network(
+                                                        food.imageUrl,
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder: (context, error, stackTrace) {
+                                                          return const Center(
+                                                            child: Icon(
+                                                              Icons.fastfood,
+                                                              color: AppTheme.primary,
+                                                              size: 40,
+                                                            ),
+                                                          );
+                                                        },
+                                                      )
+                                                    : const Center(
                                                         child: Icon(
                                                           Icons.fastfood,
                                                           color: AppTheme.primary,
                                                           size: 40,
                                                         ),
-                                                      );
-                                                    },
-                                                  )
-                                                : const Center(
-                                                    child: Icon(
-                                                      Icons.fastfood,
-                                                      color: AppTheme.primary,
-                                                      size: 40,
+                                                      ),
+                                              ),
+                                            ),
+                                            // Love button
+                                            Positioned(
+                                              top: 8,
+                                              right: 8,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme.white,
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withValues(alpha:0.15),
+                                                      blurRadius: 4,
+                                                      offset: const Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  constraints: const BoxConstraints(
+                                                    minWidth: 32,
+                                                    minHeight: 32,
+                                                  ),
+                                                  icon: Icon(
+                                                    food.isLike ?? false
+                                                        ? Icons.favorite
+                                                        : Icons.favorite_border,
+                                                    color: food.isLike ?? false
+                                                        ? AppTheme.primary
+                                                        : Colors.grey.shade400,
+                                                    size: 18,
+                                                  ),
+                                                  onPressed: () {
+                                                    context.read<HomeBloc>().add(
+                                                      ToggleLikeFood(
+                                                        foodId: food.id.toString(),
+                                                        isCurrentlyLiked: food.isLike ?? false,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Content
+                                        Padding(
+                                          padding: const EdgeInsets.all(12),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                food.name.isNotEmpty
+                                                    ? food.name[0].toUpperCase() + food.name.substring(1)
+                                                    : '',
+                                                style: AppTheme.cardTitle,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            const SizedBox(height: 6),
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 14,
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Text(
+                                                    food.rating?.toStringAsFixed(1) ?? '0.0',
+                                                    style: AppTheme.cardBody.copyWith(
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 11,
                                                     ),
                                                   ),
-                                          ),
-                                        ),
-                                        // Love button
-                                        Positioned(
-                                          top: 8,
-                                          right: 8,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppTheme.white,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black.withValues(alpha:0.15),
-                                                  blurRadius: 4,
-                                                  offset: const Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              constraints: const BoxConstraints(
-                                                minWidth: 32,
-                                                minHeight: 32,
+                                                ],
                                               ),
-                                              icon: Icon(
-                                                food.isLike ?? false
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: food.isLike ?? false
-                                                    ? AppTheme.primary
-                                                    : Colors.grey.shade400,
-                                                size: 18,
-                                              ),
-                                              onPressed: () {
-                                                context.read<HomeBloc>().add(
-                                                  ToggleLikeFood(
-                                                    foodId: food.id.toString(),
-                                                    isCurrentlyLiked: food.isLike ?? false,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Content
-                                    Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            food.name.isNotEmpty
-                                                ? food.name[0].toUpperCase() + food.name.substring(1)
-                                                : '',
-                                            style: AppTheme.cardTitle,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        const SizedBox(height: 6),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
-                                                size: 14,
-                                              ),
-                                              const SizedBox(width: 4),
+                                              const SizedBox(height: 6),
+                                              // Price
                                               Text(
-                                                food.rating?.toStringAsFixed(1) ?? '0.0',
+                                                food.price == null 
+                                                    ? 'Free'
+                                                    : 'Rp ${food.price?.toString() ?? '0'}',
                                                 style: AppTheme.cardBody.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 11,
+                                                  color: AppTheme.primary,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13,
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 6),
-                                          // Price
-                                          Text(
-                                            food.price == null 
-                                                ? 'Free'
-                                                : 'Rp ${food.price?.toString() ?? '0'}',
-                                            style: AppTheme.cardBody.copyWith(
-                                              color: AppTheme.primary,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               );
                             },

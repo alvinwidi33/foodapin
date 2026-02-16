@@ -73,8 +73,10 @@ Widget build(BuildContext context) {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             initialRoute: '/signin',
-            onGenerateRoute:
-                AppRoutes(authState).onGenerateRoute,
+            onGenerateRoute: (settings) {
+            final authState = context.read<AuthCubit>().state;
+            return AppRoutes(authState).onGenerateRoute(settings);
+          },
           ),
         ),
       );

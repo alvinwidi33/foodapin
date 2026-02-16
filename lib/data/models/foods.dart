@@ -33,7 +33,7 @@ class Foods {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
-      ingredients: List<String>.from(json['ingredients'] ?? []),
+      ingredients: _parseIngredients(json['ingredients']), // ✅ Helper
 
       price: json['price'],
       priceDiscount: json['priceDiscount'],
@@ -51,6 +51,25 @@ class Foods {
     );
   }
 
+  // ✅ Helper static method
+  static List<String> _parseIngredients(dynamic value) {
+    if (value == null) return [];
+    
+    if (value is List) {
+      return List<String>.from(value);
+    }
+    
+    if (value is String) {
+      return value
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    }
+    
+    return [];
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -61,6 +80,7 @@ class Foods {
       'price_discount': priceDiscount,
     };
   }
+
   Foods copyWith({
     String? id,
     String? name,
@@ -90,5 +110,4 @@ class Foods {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
-
 }
