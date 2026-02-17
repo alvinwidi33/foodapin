@@ -176,7 +176,7 @@ class _SignupPageState extends State<SignupPage> {
                           Text("Already a user?", style: AppTheme.subtitleDetail),
                           SizedBox(width:4),
                           GestureDetector(
-                            onTap: () => Navigator.pushReplacementNamed(context, '/my-cart'),
+                            onTap: () => Navigator.pushReplacementNamed(context, '/signin'),
                             child: Text(
                               "Sign In", 
                               style: AppTheme.subtitleDetail.copyWith(
