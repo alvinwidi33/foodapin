@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/data/repositories/auth_repository/auth_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
