@@ -35,20 +35,17 @@ Future<void> _onAdd(
   try {
     emit(CartLoading());
 
-    // Step 1: Add to cart
     final addResponse = await repository.addToCart(event.foodId);
     if (!addResponse.success) {
       emit(CartFailure(addResponse.message ?? "Failed"));
       return;
     }
 
-    // Kalau quantity = 1, selesai
     if (event.quantity == 1) {
       emit(CartSuccess("Added to cart"));
       return;
     }
 
-    // Step 2: Delay dan fetch carts
     await Future.delayed(const Duration(milliseconds: 800));
     final fetchResponse = await repository.getAllCarts();
 
@@ -70,13 +67,11 @@ Future<void> _onAdd(
     matchingCarts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     final targetCart = matchingCarts.first;
 
-    // Step 4: Update quantity (ignore 404 error)
     await repository.updateCartQuantity(
       id: targetCart.id,
       quantity: event.quantity,
     );
 
-    // Step 5: Verify dengan fetch ulang
     await Future.delayed(const Duration(milliseconds: 500));
     final verifyResponse = await repository.getAllCarts();
 
