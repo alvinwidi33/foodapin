@@ -5,6 +5,8 @@ import 'package:foodapin/data/repositories/cart_repository/cart_repository.dart'
 import 'package:foodapin/features/user/my-cart/bloc/cart_bloc.dart';
 import 'package:foodapin/features/user/my-cart/bloc/cart_event.dart';
 import 'package:foodapin/features/user/my-cart/bloc/cart_state.dart';
+import 'package:foodapin/features/user/my-cart/create_transaction/create_transaction_bloc.dart';
+import 'package:foodapin/features/user/my-cart/create_transaction/create_transaction_event.dart';
 import 'package:lottie/lottie.dart';
 
 class CartPage extends StatefulWidget {
@@ -89,7 +91,6 @@ class _CartPageState extends State<CartPage> {
             body: SafeArea(
               child: Column(
                 children: [
-                  // Header
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Row(
@@ -457,9 +458,16 @@ class _CartPageState extends State<CartPage> {
                                 width: double.infinity,
                                 height: 52,
                                 child: ElevatedButton(
-                                  onPressed: selectedCartIds.isEmpty ? null : () {
-                                    // Handle checkout
-                                  },
+                                  onPressed: selectedCartIds.isEmpty
+                                    ? null
+                                    : () {
+                                        context.read<CreateTransactionBloc>().add(
+                                          CreateTransaction(
+                                            cartIds: selectedCartIds.toList(),
+                                            paymentMethodId: "PAYMENT_ID_NANTI", 
+                                          ),
+                                        );
+                                      },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: selectedCartIds.isEmpty
                                         ? Colors.grey.shade300
