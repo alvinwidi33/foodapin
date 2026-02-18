@@ -5,9 +5,9 @@ import 'package:foodapin/features/user/detail-food/bloc/detail-food/detail_food_
 import 'package:foodapin/features/user/detail-food/bloc/detail-food/detail_food_state.dart';
 
 class DetailFoodBloc extends Bloc<DetailFoodEvent, DetailFoodState> {
-  final FoodRepository repository;
+  final FoodRepository foodRepository;
 
-  DetailFoodBloc(this.repository) : super(DetailFoodInitial()) {
+  DetailFoodBloc({ required this.foodRepository}) : super(DetailFoodInitial()) {
     on<FetchFoodDetail>(_fetchFoodDetail);
   }
 
@@ -18,7 +18,7 @@ class DetailFoodBloc extends Bloc<DetailFoodEvent, DetailFoodState> {
     emit(DetailFoodLoading());
 
     try {
-      final response = await repository.getFoodById(event.foodId);
+      final response = await foodRepository.getFoodById(event.foodId);
 
       if (!response.success || response.data == null) {
         emit(DetailFoodError(response.message ?? 'Failed to load food'));

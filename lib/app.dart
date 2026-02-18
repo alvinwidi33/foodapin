@@ -13,7 +13,12 @@ import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:foodapin/features/authentication/signup/bloc/signup_bloc.dart';
+import 'package:foodapin/features/user/detail-food/bloc/detail-food/detail_food_bloc.dart';
 import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
+import 'package:foodapin/features/user/my-cart/cart_bloc/cart_bloc.dart';
+import 'package:foodapin/features/user/my-cart/create_transaction_bloc/create_transaction_bloc.dart';
+import 'package:foodapin/features/user/my-cart/payment_method_bloc/payment_method_bloc.dart';
+import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
@@ -66,6 +71,31 @@ Widget build(BuildContext context) {
             BlocProvider(
               create: (_) => HomeBloc(
                 foodRepository: foodRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => DetailFoodBloc(
+                foodRepository: foodRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => CartBloc(
+                cartRepository: cartRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => PaymentMethodBloc(
+                paymentMethodRepository: paymentMethodRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => CreateTransactionBloc(
+                transactionRepository: transactionRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => TransactionBloc(
+                transactionRepository: transactionRepository
               ),
             ),
           ],

@@ -4,9 +4,9 @@ import 'package:foodapin/features/user/detail-food/bloc/cart/cart_event.dart';
 import 'package:foodapin/features/user/detail-food/bloc/cart/cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final CartRepository repository;
+  final CartRepository cartRepository;
 
-  CartBloc(this.repository) : super(CartInitial()) {
+  CartBloc({required this.cartRepository}) : super(CartInitial()) {
     on<FetchCarts>(_onFetch);
     on<AddToCart>(_onAdd);
     on<UpdateCartQuantity>(_onUpdate);
@@ -19,7 +19,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   ) async {
     emit(CartLoading());
 
-    final response = await repository.getAllCarts();
+    final response = await cartRepository.getAllCarts();
 
     if (response.success) {
       emit(CartLoaded(response.data!));
@@ -35,7 +35,7 @@ Future<void> _onAdd(
   try {
     emit(CartLoading());
 
-    final addResponse = await repository.addToCart(event.foodId);
+    final addResponse = await cartRepository.addToCart(event.foodId);
     if (!addResponse.success) {
       emit(CartFailure(addResponse.message ?? "Failed"));
       return;
@@ -47,7 +47,7 @@ Future<void> _onAdd(
     }
 
     await Future.delayed(const Duration(milliseconds: 800));
-    final fetchResponse = await repository.getAllCarts();
+    final fetchResponse = await cartRepository.getAllCarts();
 
     if (!fetchResponse.success || fetchResponse.data == null) {
       emit(CartFailure("Cannot fetch carts"));
@@ -67,13 +67,13 @@ Future<void> _onAdd(
     matchingCarts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     final targetCart = matchingCarts.first;
 
-    await repository.updateCartQuantity(
+    await cartRepository.updateCartQuantity(
       id: targetCart.id,
       quantity: event.quantity,
     );
 
     await Future.delayed(const Duration(milliseconds: 500));
-    final verifyResponse = await repository.getAllCarts();
+    final verifyResponse = await cartRepository.getAllCarts();
 
     if (verifyResponse.success && verifyResponse.data != null) {
       final updatedCart = verifyResponse.data!.firstWhere(
@@ -105,7 +105,7 @@ Future<void> _onAdd(
 
     emit(CartLoading());
 
-    final response = await repository.updateCartQuantity(
+    final response = await cartRepository.updateCartQuantity(
       id: event.cartId,
       quantity: event.quantity,
     );
@@ -124,7 +124,7 @@ Future<void> _onAdd(
   ) async {
     emit(CartLoading());
 
-    final response = await repository.deleteCart(event.cartId);
+    final response = await cartRepository.deleteCart(event.cartId);
 
     if (response.success) {
       emit(CartSuccess("Item removed"));

@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-   final int _currentIndex = 0;
+  final int _currentIndex = 0;
 
   @override
   void initState() {
@@ -124,6 +124,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    InkWell(
+                      onTap:(){
+                        Navigator.pushNamed(context, '/my-cart');
+                      },
+                      child: Icon(Icons.shopping_bag, color: AppTheme.primary)
+                    )
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -418,7 +425,7 @@ class _HomePageState extends State<HomePage> {
             if (index == 0) {
               Navigator.pushReplacementNamed(context, '/home');
             } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/my-orders');
+              Navigator.pushReplacementNamed(context, '/my-transactions');
             } else if (index == 2) {
               Navigator.pushReplacementNamed(context, '/my-likes');
             } else if (index == 3) {

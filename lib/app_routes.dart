@@ -5,6 +5,7 @@ import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
 import 'package:foodapin/features/user/detail-food/page/detail_food_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
 import 'package:foodapin/features/user/my-cart/pages/cart_page.dart';
+import 'package:foodapin/features/user/transaction/pages/transaction_page.dart';
 class AppRoutes {
   final AuthState authState;
 
@@ -45,6 +46,9 @@ class AppRoutes {
 
       case '/my-cart':
         return MaterialPageRoute(builder: (_) => const CartPage());
+      
+      case '/my-transactions':
+        return MaterialPageRoute(builder: (_) => const TransactionPage());
 
       default:
         return MaterialPageRoute(
