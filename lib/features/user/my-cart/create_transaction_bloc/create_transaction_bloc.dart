@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository.dart';
-import 'package:foodapin/features/user/my-cart/create_transaction/create_transaction_event.dart';
-import 'package:foodapin/features/user/my-cart/create_transaction/create_transaction_state.dart';
+import 'package:foodapin/features/user/my-cart/create_transaction_bloc/create_transaction_event.dart';
+import 'package:foodapin/features/user/my-cart/create_transaction_bloc/create_transaction_state.dart';
 
 class CreateTransactionBloc extends Bloc<CreateTransactionEvent, CreateTransactionState> {
   final TransactionRepository transactionRepository;

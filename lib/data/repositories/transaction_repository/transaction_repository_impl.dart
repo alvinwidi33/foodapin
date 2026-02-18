@@ -85,8 +85,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
       final res = await dio.post(
         '/create-transaction',
         data: {
-          'cart_ids': cartIds,
-          'payment_method_id': paymentMethodId,
+          'cartIds': cartIds,
+          'paymentMethodId': paymentMethodId,
         },
       );
 

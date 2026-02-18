@@ -26,7 +26,7 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
       context: context,
       barrierDismissible: false,
       builder: (_) => WillPopScope(
-        onWillPop: () async => false, // Prevent back button
+        onWillPop: () async => false, 
         child: Center(
           child: Lottie.asset(
             'assets/loading.json',
@@ -58,51 +58,49 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => DetailFoodBloc(context.read<FoodRepository>())
+          create: (context) => DetailFoodBloc(foodRepository: context.read<FoodRepository>())
             ..add(FetchFoodDetail(foodId: foodId)),
         ),
         BlocProvider(
-          create: (context) => CartBloc(context.read<CartRepository>()),
+          create: (context) => CartBloc(cartRepository: context.read<CartRepository>()),
         ),
       ],
       child: BlocListener<CartBloc, CartState>(
-        // ✅ PENTING: Filter state yang perlu di-listen
         listenWhen: (previous, current) {
-          // Hanya listen CartLoading pertama kali (bukan dari FetchCarts)
-          // Dan listen CartSuccess & CartFailure
+
           return current is CartSuccess || current is CartFailure || 
                  (current is CartLoading && previous is! CartLoading);
         },
         listener: (context, state) {
-  if (state is CartLoading) {
-    showLoadingDialog(context);
-  }
+        if (state is CartLoading) {
+          showLoadingDialog(context);
+        }
 
-  if (state is CartSuccess) {
-    Navigator.of(context, rootNavigator: true).pop();
+        if (state is CartSuccess) {
+          Navigator.of(context, rootNavigator: true).pop();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(state.message)),
-    );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
 
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      '/history',
-      (route) => route.isFirst,
-    );
-  }
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/my-cart',
+            (route) => route.isFirst,
+          );
+        }
 
-  if (state is CartFailure) {
-    Navigator.of(context, rootNavigator: true).pop();
+        if (state is CartFailure) {
+          Navigator.of(context, rootNavigator: true).pop();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(state.message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-},
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
 
         child: BlocBuilder<DetailFoodBloc, DetailFoodState>(
           builder: (context, state) {
@@ -200,14 +198,11 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
                                         ),
                                       ),
                                     ),
-                                    const Expanded(
+                                    Expanded(
                                       child: Center(
                                         child: Text(
                                           "Details",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: AppTheme.headingStyle
                                         ),
                                       ),
                                     ),
