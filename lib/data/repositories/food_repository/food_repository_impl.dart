@@ -53,7 +53,7 @@ class FoodRepositoryImpl implements FoodRepository {
   @override
   Future<ApiResponse<List<Foods>>> getUserLikedFoods() async {
     try {
-      final response = await dio.get('/foods/liked');
+      final response = await dio.get('/like-foods');
       final List list = response.data['data'];
       final foods = list
           .map((e) => Foods.fromJson(e))

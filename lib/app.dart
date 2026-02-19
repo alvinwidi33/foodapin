@@ -19,6 +19,8 @@ import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
 import 'package:foodapin/features/user/my-cart/cart_bloc/cart_bloc.dart';
 import 'package:foodapin/features/user/my-cart/create_transaction_bloc/create_transaction_bloc.dart';
 import 'package:foodapin/features/user/my-cart/payment_method_bloc/payment_method_bloc.dart';
+import 'package:foodapin/features/user/my-favourite/bloc/my_fav_bloc.dart';
+import 'package:foodapin/features/user/my-favourite/pages/my_fav_page.dart';
 import 'package:foodapin/features/user/transaction-detail/bloc/transaction_detail_bloc.dart';
 import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
 
@@ -108,6 +110,10 @@ Widget build(BuildContext context) {
                 transactionRepository: transactionRepository,
                 uploadRepository: uploadRepository
               ),
+            ),
+            BlocProvider<MyFavBloc>(
+              create: (context) => MyFavBloc(foodRepository: foodRepository),
+              child: MyFavPage(),
             ),
           ],
           child: MaterialApp(
