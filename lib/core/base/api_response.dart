@@ -14,10 +14,12 @@ class ApiResponse<T> {
   factory ApiResponse.success(
     T data, {
     int? statusCode,
+    String? message
   }) {
     return ApiResponse(
       success: true,
       data: data,
+      message: message,
       statusCode: statusCode,
     );
   }

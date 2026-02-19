@@ -7,6 +7,7 @@ import 'package:foodapin/data/network/dio_api_client.dart';
 import 'package:foodapin/data/network/token_storage.dart';
 
 import 'package:foodapin/data/repositories/auth_repository/auth_repository_impl.dart';
+import 'package:foodapin/data/repositories/upload_repository/upload_repository_impl.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository_impl.dart';
 import 'package:foodapin/data/repositories/food_repository/food_repository_impl.dart';
 import 'package:foodapin/data/repositories/cart_repository/cart_repository_impl.dart';
@@ -14,7 +15,6 @@ import 'package:foodapin/data/repositories/rating_repository/rating_repository_i
 import 'package:foodapin/data/repositories/payment_method_repository/payment_method_repository_impl.dart';
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository_impl.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,10 +37,9 @@ void main() async {
         foodRepository: FoodRepositoryImpl(dioClient.dio),
         cartRepository: CartRepositoryImpl(dioClient.dio),
         ratingRepository: RatingRepositoryImpl(dioClient.dio),
-        paymentMethodRepository:
-            PaymentMethodRepositoryImpl(dioClient.dio),
-        transactionRepository:
-            TransactionRepositoryImpl(dioClient.dio),
+        paymentMethodRepository: PaymentMethodRepositoryImpl(dioClient.dio),
+        transactionRepository: TransactionRepositoryImpl(dioClient.dio),
+        uploadRepository: UploadRepositoryImpl(dioClient.dio),
       ),
     ),
   );

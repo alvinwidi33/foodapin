@@ -12,14 +12,7 @@ class CreateTransactionInitial extends CreateTransactionState {}
 
 class CreateTransactionLoading extends CreateTransactionState {}
 
-class CreateTransactionSuccess extends CreateTransactionState {
-  final Transaction transaction;
-
-  const CreateTransactionSuccess(this.transaction);
-
-  @override
-  List<Object?> get props => [transaction];
-}
+class CreateTransactionSuccess extends CreateTransactionState {}
 
 class CreateTransactionError extends CreateTransactionState {
   final String message;

@@ -5,10 +5,10 @@ abstract class TransactionRepository {
   Future<ApiResponse<Transaction>> getTransactionById(String id);
   Future<ApiResponse<List<Transaction>>> getMyTransactions();
   Future<ApiResponse<List<Transaction>>> getAllTransactions();
-  Future<ApiResponse<Transaction>> createTransaction({
-    required List<String> cartIds,
-    required String paymentMethodId,
-  });
+  Future<ApiResponse<void>> createTransaction({
+  required List<String> cartIds,
+  required String paymentMethodId,
+});
   Future<ApiResponse<void>> cancelTransaction(String id);
 
   Future<ApiResponse<Transaction>> uploadProofPayment({
