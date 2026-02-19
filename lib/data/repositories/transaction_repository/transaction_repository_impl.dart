@@ -77,34 +77,33 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<ApiResponse<Transaction>> createTransaction({
-    required List<String> cartIds,
-    required String paymentMethodId,
-  }) async {
-    try {
-      final res = await dio.post(
-        '/create-transaction',
-        data: {
-          'cartIds': cartIds,
-          'paymentMethodId': paymentMethodId,
-        },
-      );
+Future<ApiResponse<void>> createTransaction({
+  required List<String> cartIds,
+  required String paymentMethodId,
+}) async {
+  try {
+    final res = await dio.post(
+      '/create-transaction',
+      data: {
+        'cartIds': cartIds,
+        'paymentMethodId': paymentMethodId,
+      },
+    );
 
-      final transaction = Transaction.fromJson(res.data['data']);
-
-      return ApiResponse.success(
-        transaction,
-        statusCode: res.statusCode,
-      );
-    } on DioException catch (e) {
-      return ApiResponse.error(
-        e.response?.data['message'] ?? 'Failed to create transaction',
-        statusCode: e.response?.statusCode,
-      );
-    } catch (_) {
-      return ApiResponse.error('Unexpected error');
-    }
+    return ApiResponse.success(
+      null,
+      statusCode: res.statusCode,
+    );
+  } on DioException catch (e) {
+    return ApiResponse.error(
+      e.response?.data['message'] ?? 'Failed to create transaction',
+      statusCode: e.response?.statusCode,
+    );
+  } catch (_) {
+    return ApiResponse.error('Unexpected error');
   }
+}
+
 
   @override
   Future<ApiResponse<void>> cancelTransaction(String id) async {
@@ -134,7 +133,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       final res = await dio.post(
         '/update-transaction-proof-payment/$transactionId',
         data: {
-          'proof_payment_url': proofPaymentUrl,
+          'proofPaymentUrl': proofPaymentUrl,
         },
       );
 

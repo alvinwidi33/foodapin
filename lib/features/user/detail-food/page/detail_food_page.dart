@@ -355,7 +355,7 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.black.withOpacity(0.08),
+                        color: AppTheme.black.withValues(alpha:0.08),
                         blurRadius: 20,
                         offset: const Offset(0, -6),
                       ),

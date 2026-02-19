@@ -8,6 +8,7 @@ import 'package:foodapin/data/repositories/food_repository/food_repository.dart'
 import 'package:foodapin/data/repositories/payment_method_repository/payment_method_repository.dart';
 import 'package:foodapin/data/repositories/rating_repository/rating_repository.dart';
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository.dart';
+import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
@@ -18,6 +19,7 @@ import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
 import 'package:foodapin/features/user/my-cart/cart_bloc/cart_bloc.dart';
 import 'package:foodapin/features/user/my-cart/create_transaction_bloc/create_transaction_bloc.dart';
 import 'package:foodapin/features/user/my-cart/payment_method_bloc/payment_method_bloc.dart';
+import 'package:foodapin/features/user/transaction-detail/bloc/transaction_detail_bloc.dart';
 import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
   final RatingRepository ratingRepository;
   final TransactionRepository transactionRepository;
   final UserRepository userRepository;
+  final UploadRepository uploadRepository;
 
   const MyApp({
     super.key,
@@ -38,6 +41,7 @@ class MyApp extends StatelessWidget {
     required this.ratingRepository,
     required this.transactionRepository,
     required this.userRepository,
+    required this.uploadRepository
   });
 
   @override
@@ -53,6 +57,7 @@ Widget build(BuildContext context) {
           RepositoryProvider.value(value: ratingRepository),
           RepositoryProvider.value(value: transactionRepository),
           RepositoryProvider.value(value: userRepository),
+          RepositoryProvider.value(value: uploadRepository)
         ],
         child: MultiBlocProvider(
           providers: [
@@ -96,6 +101,12 @@ Widget build(BuildContext context) {
             BlocProvider(
               create: (_) => TransactionBloc(
                 transactionRepository: transactionRepository
+              ),
+            ),
+            BlocProvider(
+              create: (_) => TransactionDetailBloc(
+                transactionRepository: transactionRepository,
+                uploadRepository: uploadRepository
               ),
             ),
           ],

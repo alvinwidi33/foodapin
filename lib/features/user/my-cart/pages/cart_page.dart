@@ -51,7 +51,11 @@ class _CartPageState extends State<CartPage> {
           BlocListener<CreateTransactionBloc, CreateTransactionState>(
             listener: (context, state) {
               if (state is CreateTransactionSuccess) {
-                Navigator.pushReplacementNamed(context, '/my-transaction');
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/my-transactions',
+                  (route) => false,
+                );
               }
 
               if (state is CreateTransactionError) {

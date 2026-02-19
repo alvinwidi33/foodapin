@@ -12,20 +12,23 @@ class CreateTransactionBloc extends Bloc<CreateTransactionEvent, CreateTransacti
   }
 
   Future<void> _onCreateTransaction(
-    CreateTransaction event,
-    Emitter<CreateTransactionState> emit,
-  ) async {
-    emit(CreateTransactionLoading());
+  CreateTransaction event,
+  Emitter<CreateTransactionState> emit,
+) async {
+  emit(CreateTransactionLoading());
 
-    final response = await transactionRepository.createTransaction(
-      cartIds: event.cartIds,
-      paymentMethodId: event.paymentMethodId,
-    );
+  final response = await transactionRepository.createTransaction(
+    cartIds: event.cartIds,
+    paymentMethodId: event.paymentMethodId,
+  );
 
-    if (response.success && response.data != null) {
-      emit(CreateTransactionSuccess(response.data!));
-    } else {
-      emit(CreateTransactionError(response.message ?? 'Failed to create transaction'));
-    }
+  if (response.success) {
+    emit(CreateTransactionSuccess());
+  } else {
+    emit(CreateTransactionError(
+      response.message ?? 'Failed to create transaction',
+    ));
   }
+}
+
 }
