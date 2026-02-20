@@ -6,7 +6,7 @@ class Foods {
   final List<String> ingredients;
   final int? price;
   final int? priceDiscount;
-  final int? rating;
+  final double? rating;
   final int? totalLikes;
   final bool? isLike;
   final DateTime createdAt;
@@ -33,8 +33,7 @@ class Foods {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
-      ingredients: _parseIngredients(json['ingredients']), // ✅ Helper
-
+      ingredients: _parseIngredients(json['ingredients']),
       price: json['price'],
       priceDiscount: json['priceDiscount'],
       rating: json['rating'],
@@ -89,7 +88,7 @@ class Foods {
     List<String>? ingredients,
     int? price,
     int? priceDiscount,
-    int? rating,
+    double? rating,
     int? totalLikes,
     bool? isLike,
     DateTime? createdAt,

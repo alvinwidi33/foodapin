@@ -45,7 +45,7 @@ class _SigninPageState extends State<SigninPage> {
             SnackBar(content: Text("Hello ${state.user.name}. Welcome back!", style:AppTheme.bodyStyle)),
           );
             if (state.user.role.toLowerCase() == 'admin') {
-              Navigator.pushReplacementNamed(context, '/dashboard');
+              Navigator.pushReplacementNamed(context, '/foods');
             } else {
               Navigator.pushReplacementNamed(context, '/home');
             }
