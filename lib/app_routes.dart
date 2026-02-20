@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
@@ -60,8 +61,12 @@ class AppRoutes {
         builder: (_) => const TransactionDetailPage(),
         settings: settings,
       );
+
     case '/my-likes':
       return MaterialPageRoute(builder: (_) => const MyFavPage());
+    
+    case '/foods':
+      return MaterialPageRoute(builder: (_) => const FoodsPage());
 
     default:
       return MaterialPageRoute(

@@ -10,6 +10,8 @@ import 'package:foodapin/data/repositories/rating_repository/rating_repository.d
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository.dart';
 import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
+import 'package:foodapin/features/admin/foods/bloc/foods_bloc.dart';
+import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
@@ -114,6 +116,10 @@ Widget build(BuildContext context) {
             BlocProvider<MyFavBloc>(
               create: (context) => MyFavBloc(foodRepository: foodRepository),
               child: MyFavPage(),
+            ),
+            BlocProvider<FoodsAdminBloc>(
+              create: (context) => FoodsAdminBloc(foodRepository: foodRepository),
+              child: FoodsPage(),
             ),
           ],
           child: MaterialApp(

@@ -26,8 +26,10 @@ class FoodRepositoryImpl implements FoodRepository {
         e.response?.data['message'] ?? 'Failed to fetch foods',
         statusCode: e.response?.statusCode,
       );
-    } catch (e){
-      return ApiResponse.error('Unexpected error');
+    } catch (e, stackTrace){
+      print('UNEXPECTED ERROR: $e');
+      print('STACK: $stackTrace');
+      return ApiResponse.error('Unexpected error: $e');
     }
   }
 
