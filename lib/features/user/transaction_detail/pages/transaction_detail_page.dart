@@ -803,7 +803,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                                                 ),
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                      vertical: 16,
+                                                      vertical: 20,
                                                     ),
                                               ),
                                               child: Text(

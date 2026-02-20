@@ -272,12 +272,16 @@ class _TransactionPageState extends State<TransactionPage> with SingleTickerProv
   
   Widget _buildTransactionCard(Transaction transaction) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
+      onTap: () async {
+        final result = await Navigator.pushNamed(
           context,
           '/my-transaction-detail',
-          arguments : transaction.id
+          arguments: transaction.id,
         );
+
+        if (result == true) {
+          context.read<TransactionBloc>().add(FetchTransaction());
+        }
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),

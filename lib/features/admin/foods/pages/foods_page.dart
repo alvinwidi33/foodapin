@@ -396,10 +396,8 @@ class _FoodsPageState extends State<FoodsPage> {
             if (index == 0) {
               Navigator.pushReplacementNamed(context, '/foods');
             } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/users');
-            } else if (index == 2) {
               Navigator.pushReplacementNamed(context, '/transactions');
-            } else if (index == 3) {
+            } else if (index == 2) {
               Navigator.pushReplacementNamed(context, '/profile');
             }
           }

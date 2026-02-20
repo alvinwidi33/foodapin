@@ -14,6 +14,9 @@ import 'package:foodapin/features/admin/create_foods/bloc/create_food_bloc.dart'
 import 'package:foodapin/features/admin/detail_food_admin/bloc/delete/delete_food_bloc.dart';
 import 'package:foodapin/features/admin/detail_food_admin/bloc/detail/detail_food_admin_bloc.dart';
 import 'package:foodapin/features/admin/foods/bloc/foods_bloc.dart';
+import 'package:foodapin/features/admin/transactions/bloc/all_transactions/transactions_bloc.dart';
+import 'package:foodapin/features/admin/update_food/bloc/detail_update/detail_update_food_bloc.dart';
+import 'package:foodapin/features/admin/update_food/bloc/update/update_food_state.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
@@ -128,6 +131,15 @@ Widget build(BuildContext context) {
             ),
             BlocProvider<DeleteFoodBloc>(
               create: (context) => DeleteFoodBloc(foodRepository: foodRepository),
+            ),
+            BlocProvider<UpdateFoodBloc>(
+              create: (context) => UpdateFoodBloc(foodRepository: foodRepository),
+            ),
+            BlocProvider<DetailUpdateFoodBloc>(
+              create: (context) => DetailUpdateFoodBloc(foodRepository: foodRepository),
+            ),
+            BlocProvider<TransactionsBloc>(
+              create: (context) => TransactionsBloc(transactionRepository: transactionRepository),
             ),
           ],
           child: MaterialApp(
