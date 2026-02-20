@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foodapin/features/admin/create_foods/pages/create_food_page.dart';
+import 'package:foodapin/features/admin/detail_food_admin/pages/detail_food_admin_page.dart';
 import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
-import 'package:foodapin/features/user/detail-food/page/detail_food_page.dart';
+import 'package:foodapin/features/user/detail_food/page/detail_food_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
-import 'package:foodapin/features/user/my-cart/pages/cart_page.dart';
+import 'package:foodapin/features/user/my_cart/pages/cart_page.dart';
 import 'package:foodapin/features/user/my-favourite/pages/my_fav_page.dart';
-import 'package:foodapin/features/user/transaction-detail/pages/transaction_detail_page.dart';
+import 'package:foodapin/features/user/transaction_detail/pages/transaction_detail_page.dart';
 import 'package:foodapin/features/user/transaction/pages/transaction_page.dart';
 class AppRoutes {
   final AuthState authState;
@@ -67,6 +69,12 @@ class AppRoutes {
     
     case '/foods':
       return MaterialPageRoute(builder: (_) => const FoodsPage());
+
+    case '/add-food':
+      return MaterialPageRoute(builder: (_) => const CreateFoodPage());
+
+    case '/food':
+      return MaterialPageRoute(builder: (_) => const DetailFoodAdminPage(), settings: settings);
 
     default:
       return MaterialPageRoute(

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
-import 'package:foodapin/components/navbar.dart';
 import 'package:foodapin/components/navbar_admin.dart';
 import 'package:foodapin/features/admin/foods/bloc/foods_bloc.dart';
 import 'package:foodapin/features/admin/foods/bloc/foods_event.dart';
 import 'package:foodapin/features/admin/foods/bloc/foods_state.dart';
-import 'package:foodapin/features/user/home/bloc/home_event.dart';
 import 'package:lottie/lottie.dart';
 
 class FoodsPage extends StatefulWidget {
@@ -77,13 +75,18 @@ class _FoodsPageState extends State<FoodsPage> {
     final screenWidth = MediaQuery.of(context).size.width * 0.92;
       return Scaffold(
         floatingActionButton: FloatingActionButton(
-    onPressed: () {
-      Navigator.pushNamed(context, '/add-food');
-    },
-    backgroundColor: AppTheme.secondary,
-    child: const Icon(Icons.add, color: Colors.white),
-  ),
-  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          onPressed: () async {
+            final result = await Navigator.pushNamed(context, '/add-food');
+
+            if (result == true) {
+              context.read<FoodsAdminBloc>().add(
+                const FetchFoodsAdmin(isRefresh: true),
+              );
+            }
+          },
+          backgroundColor: AppTheme.secondary,
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
       body: SafeArea(
         child: Center(
           child: SizedBox(
@@ -208,12 +211,18 @@ class _FoodsPageState extends State<FoodsPage> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(16),
-                                    onTap: () {
-                                      Navigator.pushNamed(
+                                    onTap: () async {
+                                      final result = await Navigator.pushNamed(
                                         context,
-                                        '/detail-food', 
+                                        '/food',
                                         arguments: food.id,
                                       );
+
+                                      if (result == true) {
+                                        context.read<FoodsAdminBloc>().add(
+                                          const FetchFoodsAdmin(isRefresh: true),
+                                        );
+                                      }
                                     },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -467,8 +476,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
           ),
           
           const Divider(),
-          
-          // Sort Options
           Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -501,12 +508,10 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             ),
           ),
           
-          // Action Buttons
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             child: Row(
               children: [
-                // Clear button
                 Expanded(
                   child: OutlinedButton(
                     onPressed: widget.onClearFilter,

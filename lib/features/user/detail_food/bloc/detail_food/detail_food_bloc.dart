@@ -1,8 +1,8 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/data/repositories/food_repository/food_repository.dart';
-import 'package:foodapin/features/user/detail-food/bloc/detail-food/detail_food_event.dart';
-import 'package:foodapin/features/user/detail-food/bloc/detail-food/detail_food_state.dart';
+import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_event.dart';
+import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_state.dart';
 
 class DetailFoodBloc extends Bloc<DetailFoodEvent, DetailFoodState> {
   final FoodRepository foodRepository;

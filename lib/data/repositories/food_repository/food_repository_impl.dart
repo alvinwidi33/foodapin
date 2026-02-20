@@ -26,9 +26,7 @@ class FoodRepositoryImpl implements FoodRepository {
         e.response?.data['message'] ?? 'Failed to fetch foods',
         statusCode: e.response?.statusCode,
       );
-    } catch (e, stackTrace){
-      print('UNEXPECTED ERROR: $e');
-      print('STACK: $stackTrace');
+    } catch (e){
       return ApiResponse.error('Unexpected error: $e');
     }
   }
@@ -75,17 +73,15 @@ class FoodRepositoryImpl implements FoodRepository {
   }
 
   @override
-  Future<ApiResponse<Foods>> createFood(Foods food) async {
+  Future<ApiResponse<void>> createFood(Foods food) async {
     try {
       final res = await dio.post(
-        '/foods',
+        '/create-food',
         data: food.toJson(),
       );
 
-      final createdFood = Foods.fromJson(res.data['data']);
-
       return ApiResponse.success(
-        createdFood,
+        null,
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {
@@ -99,14 +95,13 @@ class FoodRepositoryImpl implements FoodRepository {
   }
 
   @override
-  Future<ApiResponse<Foods>> updateFood(String id, Foods food) async {
+  Future<ApiResponse<void>> updateFood(String id, Foods food) async {
     try {
       final response = await dio.post(
-        '/foods/$id',
+        '/update-food/$id',
         data: food.toJson(),
       );
-      final updatedFood = Foods.fromJson(response.data['data']);
-      return ApiResponse.success(updatedFood, statusCode: response.statusCode);
+      return ApiResponse.success(null, statusCode: response.statusCode);
     } on DioException catch (e) {
       return ApiResponse.error(
         e.response?.data['message'] ?? 'Failed to update food',
@@ -119,7 +114,7 @@ class FoodRepositoryImpl implements FoodRepository {
   @override
   Future<ApiResponse<void>> deleteFood(String id) async {
     try {
-      final response = await dio.delete('/foods/$id');
+      final response = await dio.delete('/delete-food/$id');
       return ApiResponse.success(null, statusCode: response.statusCode);
     } on DioException catch (e) {
       return ApiResponse.error(
