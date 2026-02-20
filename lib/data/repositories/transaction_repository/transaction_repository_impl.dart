@@ -108,7 +108,7 @@ Future<ApiResponse<void>> createTransaction({
   @override
   Future<ApiResponse<void>> cancelTransaction(String id) async {
     try {
-      final res = await dio.post('/cancel-transactions/$id');
+      final res = await dio.post('/cancel-transaction/$id');
 
       return ApiResponse.success(
         null,

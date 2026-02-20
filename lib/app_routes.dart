@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:foodapin/features/admin/create_foods/pages/create_food_page.dart';
 import 'package:foodapin/features/admin/detail_food_admin/pages/detail_food_admin_page.dart';
 import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
+import 'package:foodapin/features/admin/transactions/pages/all_transactions_page.dart';
+import 'package:foodapin/features/admin/update_food/pages/update_food_page.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
+import 'package:foodapin/features/profile/pages/profile_page.dart';
 import 'package:foodapin/features/user/detail_food/page/detail_food_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
 import 'package:foodapin/features/user/my_cart/pages/cart_page.dart';
@@ -75,6 +78,15 @@ class AppRoutes {
 
     case '/food':
       return MaterialPageRoute(builder: (_) => const DetailFoodAdminPage(), settings: settings);
+    
+    case '/update-food':
+      return MaterialPageRoute(builder: (_) => const UpdateFoodPage(), settings: settings);
+
+    case '/transactions':
+      return MaterialPageRoute(builder: (_) => const AllTransactionsPage());
+
+    case '/profile':
+      return MaterialPageRoute(builder: (_) => const ProfilePage());
 
     default:
       return MaterialPageRoute(
