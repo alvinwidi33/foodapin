@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/data/repositories/cart_repository/cart_repository.dart';
-import 'package:foodapin/features/user/detail-food/bloc/cart/cart_event.dart';
-import 'package:foodapin/features/user/detail-food/bloc/cart/cart_state.dart';
+import 'package:foodapin/features/user/detail_food/bloc/cart/cart_event.dart';
+import 'package:foodapin/features/user/detail_food/bloc/cart/cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository cartRepository;

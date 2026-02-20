@@ -22,7 +22,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
   bool _isUploading = false;
   Transaction? _transaction;
   late String transactionId;
-  File? _selectedImage;
+  XFile? _selectedImage;
   final ImagePicker _picker = ImagePicker();
 
   bool _isFirstLoad = true;
@@ -112,7 +112,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
 
       if (image != null) {
         setState(() {
-          _selectedImage = File(image.path);
+          _selectedImage = XFile(image.path);
         });
         _showUploadConfirmation();
       }
@@ -267,8 +267,8 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
         _selectedImage!.path,
         fit: BoxFit.cover,
       )
-    : Image.file(
-        _selectedImage!,
+    : Image.network(
+        _selectedImage!.path,
         fit: BoxFit.cover,
       ),
 
