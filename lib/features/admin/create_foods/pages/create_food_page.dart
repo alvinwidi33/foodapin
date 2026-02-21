@@ -9,6 +9,8 @@ import 'package:foodapin/data/repositories/food_repository/food_repository.dart'
 import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'dart:io';
 
+import 'package:lottie/lottie.dart';
+
 class CreateFoodPage extends StatefulWidget {
   const CreateFoodPage({super.key});
 
@@ -306,9 +308,9 @@ class _CreateFoodPageState extends State<CreateFoodPage> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                               ),
                               child: _isLoading
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       height: 20, width: 20,
-                                      child: CircularProgressIndicator(color: AppTheme.white, strokeWidth: 2),
+                                      child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true)),
                                     )
                                   : Text('Add Food', style: AppTheme.buttonStyle),
                             ),
@@ -354,7 +356,7 @@ class _CreateFoodPageState extends State<CreateFoodPage> {
                     if (_isUploadingImage)
                       Container(
                         color: Colors.black.withValues(alpha: 0.45),
-                        child: const Center(child: CircularProgressIndicator(color: AppTheme.white)),
+                        child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true)),
                       )
                     else if (_uploadedImageUrl != null)
                       Positioned(

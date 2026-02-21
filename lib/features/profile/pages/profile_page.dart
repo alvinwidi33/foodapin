@@ -55,7 +55,7 @@ class _ProfileView extends StatelessWidget {
                       onTap: (index) {
                         if (index == profileIndex) return;
                         if (index == 0) {
-                          Navigator.pushReplacementNamed(context, '/dashboard');
+                          Navigator.pushReplacementNamed(context, '/foods');
                         } else if (index == 1) {
                           Navigator.pushReplacementNamed(context, '/users');
                         } else if (index == 2) {
@@ -137,102 +137,105 @@ class _ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _buildHeader(context, screenWidth),
-          const SizedBox(height: 64),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  user.name.isNotEmpty ? user.name : 'User',
-                  style: AppTheme.headingStyle.copyWith(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: user.role == 'admin'
-                        ? AppTheme.primary.withValues(alpha: 0.12)
-                        : AppTheme.secondary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(20),
+    return SafeArea(
+      bottom: false,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildHeader(context, screenWidth),
+            const SizedBox(height: 64),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    user.name.isNotEmpty ? user.name : 'User',
+                    style: AppTheme.headingStyle.copyWith(fontSize: 20),
+                    textAlign: TextAlign.center,
                   ),
-                  child: Text(
-                    _capitalize(user.role),
-                    style: AppTheme.cardTitle.copyWith(
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 4),
+                    decoration: BoxDecoration(
                       color: user.role == 'admin'
-                          ? AppTheme.primary
-                          : AppTheme.secondary,
-                      fontSize: 12,
+                          ? AppTheme.primary.withValues(alpha: 0.12)
+                          : AppTheme.secondary.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      _capitalize(user.role),
+                      style: AppTheme.cardTitle.copyWith(
+                        color: user.role == 'admin'
+                            ? AppTheme.primary
+                            : AppTheme.secondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                _sectionLabel('Account Info'),
-                const SizedBox(height: 10),
-                _InfoCard(
-                  children: [
-                    _InfoRow(
-                      icon: Icons.person_outline,
-                      label: 'Name',
-                      value: user.name.isNotEmpty ? user.name : '-',
-                    ),
-                    _divider(),
-                    _InfoRow(
-                      icon: Icons.email_outlined,
-                      label: 'Email',
-                      value: user.email.isNotEmpty ? user.email : '-',
-                    ),
-                    _divider(),
-                    _InfoRow(
-                      icon: Icons.phone_outlined,
-                      label: 'Phone',
-                      value: user.phoneNumber.isNotEmpty
-                          ? user.phoneNumber
-                          : '-',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                _sectionLabel('Settings'),
-                const SizedBox(height: 10),
-                _InfoCard(
-                  children: [
-                    _ActionRow(
-                      icon: Icons.edit_outlined,
-                      label: 'Edit Profile',
-                      onTap: () async {
-                        final updated = await Navigator.pushNamed(
-                          context,
-                          '/update-profile',
-                          arguments: user,
-                        );
-                        if (updated == true && context.mounted) {
-                          context
-                              .read<CurrentUserBloc>()
-                              .add(GetCurrentUser());
-                        }
-                      },
-                    ),
-                    _divider(),
-                    _ActionRow(
-                      icon: Icons.logout,
-                      label: 'Sign Out',
-                      isDestructive: true,
-                      onTap: () => _showLogoutSheet(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 36),
-              ],
+                  const SizedBox(height: 24),
+                  _sectionLabel('Account Info'),
+                  const SizedBox(height: 10),
+                  _InfoCard(
+                    children: [
+                      _InfoRow(
+                        icon: Icons.person_outline,
+                        label: 'Name',
+                        value: user.name.isNotEmpty ? user.name : '-',
+                      ),
+                      _divider(),
+                      _InfoRow(
+                        icon: Icons.email_outlined,
+                        label: 'Email',
+                        value: user.email.isNotEmpty ? user.email : '-',
+                      ),
+                      _divider(),
+                      _InfoRow(
+                        icon: Icons.phone_outlined,
+                        label: 'Phone',
+                        value: user.phoneNumber.isNotEmpty
+                            ? user.phoneNumber
+                            : '-',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  _sectionLabel('Settings'),
+                  const SizedBox(height: 10),
+                  _InfoCard(
+                    children: [
+                      _ActionRow(
+                        icon: Icons.edit_outlined,
+                        label: 'Edit Profile',
+                        onTap: () async {
+                          final updated = await Navigator.pushNamed(
+                            context,
+                            '/update-profile',
+                            arguments: user,
+                          );
+                          if (updated == true && context.mounted) {
+                            context
+                                .read<CurrentUserBloc>()
+                                .add(GetCurrentUser());
+                          }
+                        },
+                      ),
+                      _divider(),
+                      _ActionRow(
+                        icon: Icons.logout,
+                        label: 'Sign Out',
+                        isDestructive: true,
+                        onTap: () => _showLogoutSheet(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 36),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

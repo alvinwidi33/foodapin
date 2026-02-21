@@ -10,6 +10,7 @@ import 'package:foodapin/features/update_profile/bloc/update_profile_bloc.dart';
 import 'package:foodapin/features/update_profile/bloc/update_profile_event.dart';
 import 'package:foodapin/features/update_profile/bloc/update_profile_state.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 
 class UpdateProfilePage extends StatelessWidget {
   final Users user;
@@ -201,12 +202,7 @@ Future<void> _uploadImage(XFile file) async {
                                       color: Colors.black.withValues(alpha: 0.4),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
+                                    child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                   ),
                                 ),
                             ],
@@ -550,14 +546,7 @@ class _SubmitButton extends StatelessWidget {
               elevation: 0,
             ),
             child: isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
+                ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                 : Text(
                     'Save Changes',
                     style: AppTheme.buttonStyle,

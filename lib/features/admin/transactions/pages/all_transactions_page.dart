@@ -11,6 +11,7 @@ import 'package:foodapin/features/admin/transactions/bloc/update_status/update_s
 import 'package:foodapin/features/admin/transactions/bloc/update_status/update_status_event.dart';
 import 'package:foodapin/features/admin/transactions/bloc/update_status/update_status_state.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class AllTransactionsPage extends StatelessWidget {
   const AllTransactionsPage({super.key});
@@ -201,9 +202,8 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                       builder: (context, state) {
                         if (state is TransactionsLoading ||
                             state is TransactionsInitial) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                                color: AppTheme.primary),
+                          return Center(
+                            child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true)),
                           );
                         } else if (state is TransactionsError) {
                           return _buildError(context, state.message);
@@ -432,13 +432,7 @@ class _TransactionCardState extends State<_TransactionCard> {
                       ),
                       const SizedBox(height: 16),
                       if (isLoading)
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 24),
-                            child: CircularProgressIndicator(
-                                color: AppTheme.primary),
-                          ),
-                        )
+                        Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                       else
                         ..._statusOptions.map((status) {
                           final isCurrent = _localStatus.toLowerCase() == status;
@@ -708,14 +702,7 @@ class _TransactionCardState extends State<_TransactionCard> {
                                 elevation: 0,
                               ),
                               icon: isLoading
-                                  ? const SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
+                                  ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                   : const Icon(Icons.check_circle_outline,
                                       size: 18),
                               label: Text(

@@ -6,6 +6,7 @@ import 'package:foodapin/data/repositories/user_repository/user_repository.dart'
 import 'package:foodapin/features/admin/users/bloc/users_bloc.dart';
 import 'package:foodapin/features/admin/users/bloc/users_event.dart';
 import 'package:foodapin/features/admin/users/bloc/users_state.dart';
+import 'package:lottie/lottie.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -27,7 +28,7 @@ class UsersPage extends StatelessWidget {
         body: BlocBuilder<UsersBloc, UsersState>(
           builder: (context, state) {
             if (state is UsersLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true));
             }
 
             if (state is UsersError) {

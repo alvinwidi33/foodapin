@@ -34,15 +34,28 @@ class Foods {
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       ingredients: _parseIngredients(json['ingredients']),
-      price: json['price'],
-      priceDiscount: json['priceDiscount'],
-      rating: json['rating'],
-      totalLikes: json['totalLikes'],       
-      isLike: json['isLike'],            
+
+      price: json['price'] != null
+          ? (json['price'] as num).toInt()
+          : null,
+
+      priceDiscount: json['priceDiscount'] != null
+          ? (json['priceDiscount'] as num).toInt()
+          : null,
+
+      rating: json['rating'] != null
+          ? (json['rating'] as num).toDouble()
+          : null,
+
+      totalLikes: json['totalLikes'] != null
+          ? (json['totalLikes'] as num).toInt()
+          : null,
+
+      isLike: json['isLike'] ?? false,
 
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),               
+          : DateTime.now(),
 
       updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'])

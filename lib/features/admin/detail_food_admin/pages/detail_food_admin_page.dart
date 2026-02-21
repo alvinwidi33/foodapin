@@ -278,14 +278,7 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                                     padding: const EdgeInsets.symmetric(vertical: 20),
                                   ),
                                   icon: deleteState.isLoading
-                                      ? const SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: CircularProgressIndicator(
-                                            color: AppTheme.secondary,
-                                            strokeWidth: 2,
-                                          ),
-                                        )
+                                      ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                       : const Icon(Icons.delete_outline, color: AppTheme.secondary, size: 20),
                                   label: Text(
                                     'Delete',

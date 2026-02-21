@@ -466,9 +466,9 @@ class _CartPageState extends State<CartPage> {
                                       child: BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
                                         builder: (context, paymentState) {
                                           if (paymentState is PaymentMethodLoading) {
-                                            return const SizedBox(
+                                            return SizedBox(
                                               height: 40,
-                                              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                              child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                             );
                                           }
 
