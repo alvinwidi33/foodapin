@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/data/repositories/cart_repository/cart_repository.dart';
 import 'package:foodapin/data/repositories/food_repository/food_repository.dart';
+import 'package:foodapin/data/repositories/rating_repository/rating_repository.dart';
 import 'package:foodapin/features/user/detail_food/bloc/cart/cart_bloc.dart';
 import 'package:foodapin/features/user/detail_food/bloc/cart/cart_event.dart';
 import 'package:foodapin/features/user/detail_food/bloc/cart/cart_state.dart';
 import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_bloc.dart';
 import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_event.dart';
 import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_state.dart';
+import 'package:foodapin/features/user/detail_food/bloc/rating/rating_bloc.dart';
+import 'package:foodapin/features/user/detail_food/bloc/rating/rating_event.dart';
+import 'package:foodapin/features/user/detail_food/bloc/rating/rating_state.dart';
 import 'package:lottie/lottie.dart';
 
 class DetailFoodPage extends StatefulWidget {
@@ -20,6 +24,8 @@ class DetailFoodPage extends StatefulWidget {
 
 class _DetailFoodPageState extends State<DetailFoodPage> {
   int quantity = 1;
+  int selectedRating = 0;
+  final TextEditingController reviewController = TextEditingController(); 
 
   void showLoadingDialog(BuildContext context) {
     showDialog(
@@ -44,7 +50,11 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
       Navigator.pop(context);
     }
   }
-
+  @override
+  void dispose() {
+    reviewController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
@@ -63,6 +73,10 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
         ),
         BlocProvider(
           create: (context) => CartBloc(cartRepository: context.read<CartRepository>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              RatingBloc(ratingRepository: context.read<RatingRepository>()),
         ),
       ],
       child: BlocListener<CartBloc, CartState>(
@@ -336,8 +350,120 @@ class _DetailFoodPageState extends State<DetailFoodPage> {
                                       );
                                     }).toList(),
                                   ),
-                                ],
-                                const SizedBox(height: 100),
+                                ],      
+                                const SizedBox(height: 24),
+
+                                  Text("Rate This Food", style: AppTheme.titleDetail),
+                                  const SizedBox(height: 12),
+
+                                  BlocConsumer<RatingBloc, RatingState>(
+                                  listener: (context, state) {
+                                    if (state is RatingSuccess) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text("Rating submitted successfully")),
+                                      );
+                                      setState(() {
+                                        selectedRating = 0;
+                                      });
+                                      reviewController.clear();
+                                      context.read<DetailFoodBloc>().add(
+                                        FetchFoodDetail(foodId: foodId),
+                                      );
+                                    }
+
+                                    if (state is RatingError) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(state.message),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    final isLoading = state is RatingLoading;
+
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: List.generate(5, (index) {
+                                            final starIndex = index + 1;
+
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedRating = starIndex;
+                                                });
+                                              },
+                                              child: Icon(
+                                                starIndex <= selectedRating
+                                                    ? Icons.star
+                                                    : Icons.star_border,
+                                                color: Colors.amber,
+                                                size: 30,
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        TextField(
+                                  controller: reviewController,
+                                  maxLines: 3,
+                                  decoration: InputDecoration(
+                                    hintText: "Write your review (optional)",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: BorderSide(color: AppTheme.primary),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: isLoading
+                                                ? null
+                                                : () {
+                                                    if (selectedRating == 0) {
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text("Please select rating first"),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+                                                    context.read<RatingBloc>().add(
+                                                          CreateRatingEvent(
+                                                            foodId: food.id!,
+                                                            rating: selectedRating,
+                                                            review: reviewController.text.trim(),
+                                                          ),
+                                                        );
+                                                  },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppTheme.secondary,
+                                            ),
+                                            child: isLoading
+                                                ? const SizedBox(
+                                                    height: 20,
+                                                    width: 20,
+                                                    child: CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                      strokeWidth: 2,
+                                                    ),
+                                                  )
+                                                : const Text("Submit Rating", style:TextStyle(color:AppTheme.white)),
+                                          ),
+                                        ),
+                                        const SizedBox(height:20)
+                                      ],
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),
