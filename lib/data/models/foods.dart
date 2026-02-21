@@ -64,22 +64,22 @@ class Foods {
   }
 
   static List<String> _parseIngredients(dynamic value) {
-    if (value == null) return [];
-    
-    if (value is List) {
-      return List<String>.from(value);
-    }
-    
-    if (value is String) {
-      return value
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
-    }
-    
-    return [];
+  if (value == null) return [];
+
+  if (value is List) {
+    return value.map((e) => e.toString()).toList();
   }
+
+  if (value is String) {
+    return value
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+  }
+
+  return [];
+}
 
   Map<String, dynamic> toJson() {
     return {
