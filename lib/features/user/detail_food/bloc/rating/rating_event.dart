@@ -21,3 +21,8 @@ class CreateRatingEvent extends RatingEvent {
   @override
   List<Object?> get props => [foodId, rating, review];
 }
+class FetchRatingsByFood extends RatingEvent {
+  final String foodId;
+
+  FetchRatingsByFood({required this.foodId});
+}

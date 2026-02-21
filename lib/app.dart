@@ -18,6 +18,7 @@ import 'package:foodapin/features/admin/transactions/bloc/all_transactions/trans
 import 'package:foodapin/features/admin/transactions/bloc/update_status/update_status_bloc.dart';
 import 'package:foodapin/features/admin/update_food/bloc/detail_update/detail_update_food_bloc.dart';
 import 'package:foodapin/features/admin/update_food/bloc/update/update_food_state.dart';
+import 'package:foodapin/features/admin/users/bloc/users_bloc.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
@@ -33,6 +34,7 @@ import 'package:foodapin/features/user/my_cart/payment_method_bloc/payment_metho
 import 'package:foodapin/features/user/my-favourite/bloc/my_fav_bloc.dart';
 import 'package:foodapin/features/user/transaction_detail/bloc/transaction/transaction_detail_bloc.dart';
 import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
@@ -159,6 +161,9 @@ Widget build(BuildContext context) {
             ),
             BlocProvider<UpdateProfileBloc>(
               create: (context) => UpdateProfileBloc(userRepository: userRepository, uploadRepository: uploadRepository),
+            ),
+            BlocProvider<UsersBloc>(
+              create: (context) => UsersBloc(userRepository: userRepository),
             ),
           ],
             child: MaterialApp(

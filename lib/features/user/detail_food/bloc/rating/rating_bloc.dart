@@ -8,6 +8,7 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
 
   RatingBloc({required this.ratingRepository}) : super(RatingInitial()) {
     on<CreateRatingEvent>(_onCreateRating);
+    on<FetchRatingsByFood>(_onFetchRatings);
   }
 
   Future<void> _onCreateRating(
@@ -26,6 +27,21 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
       emit(RatingSuccess());
     } else {
       emit(RatingError(response.message ?? 'Failed to rate'));
+    }
+  }
+  Future<void> _onFetchRatings(
+    FetchRatingsByFood event,
+    Emitter<RatingState> emit,
+  ) async {
+    emit(RatingLoading());
+
+    final response =
+        await ratingRepository.getRatingsByFood(event.foodId);
+
+    if (response.success && response.data != null) {
+      emit(RatingLoaded(response.data!));
+    } else {
+      emit(RatingError(response.message ?? 'Failed to fetch ratings'));
     }
   }
 }

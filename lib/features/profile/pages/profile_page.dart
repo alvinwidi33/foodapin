@@ -159,7 +159,7 @@ class _ProfileContent extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: user.role == 'admin'
                         ? AppTheme.primary.withValues(alpha: 0.12)
-                        : Colors.grey.shade200,
+                        : AppTheme.secondary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -167,7 +167,7 @@ class _ProfileContent extends StatelessWidget {
                     style: AppTheme.cardTitle.copyWith(
                       color: user.role == 'admin'
                           ? AppTheme.primary
-                          : Colors.grey.shade600,
+                          : AppTheme.secondary,
                       fontSize: 12,
                     ),
                   ),
