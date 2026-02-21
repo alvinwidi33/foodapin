@@ -1,16 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/data/models/transaction.dart';
-import 'package:foodapin/data/repositories/rating_repository/rating_repository.dart';
 import 'package:foodapin/data/repositories/transaction_repository/transaction_repository.dart';
 import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
-import 'package:foodapin/features/user/transaction_detail/bloc/rating/rating_bloc.dart';
-import 'package:foodapin/features/user/transaction_detail/bloc/rating/rating_event.dart';
-import 'package:foodapin/features/user/transaction_detail/bloc/rating/rating_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -167,19 +162,6 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
     }
   }
 
-  void _showRatingSheet(TransactionItem item) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider(
-        create: (ctx) =>
-            RatingBloc(ratingRepository: ctx.read<RatingRepository>()),
-        child: _RatingSheet(item: item),
-      ),
-    );
-  }
-
   Future<bool> _showCancelConfirmation() async {
     return await showDialog<bool>(
           context: context,
@@ -319,8 +301,6 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
     final isSuccess = status == 'success' || status == 'success';
     final hasProof = _transaction?.proofPaymentUrl != null &&
         _transaction!.proofPaymentUrl!.isNotEmpty;
-
-    final showRating = (isPending && hasProof) || isSuccess;
 
     return Scaffold(
       body: Stack(
@@ -520,14 +500,6 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                                           ),
                                         ],
 
-                                        // Proof sudah ada / sudah success → rating section
-                                        if (showRating) ...[
-                                          _RateItemsSection(
-                                            items: _transaction!.items,
-                                            onRateTap: _showRatingSheet,
-                                          ),
-                                        ],
-
                                         const SizedBox(height: 24),
                                       ],
                                     ),
@@ -641,112 +613,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
 
 // ─────────────────────────────────────────────
 // Rate Items Section
-// ─────────────────────────────────────────────
-
-class _RateItemsSection extends StatelessWidget {
-  final List<TransactionItem> items;
-  final void Function(TransactionItem) onRateTap;
-
-  const _RateItemsSection({required this.items, required this.onRateTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.star_outline, size: 18, color: AppTheme.primary),
-              const SizedBox(width: 8),
-              Text('Rate Your Order', style: AppTheme.titleDetail),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Bagikan pengalamanmu untuk setiap item',
-            style: AppTheme.cardBody
-                .copyWith(color: Colors.grey.shade500, fontSize: 12),
-          ),
-          const SizedBox(height: 16),
-          ...items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        item.imageUrl,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: AppTheme.fourtenary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(Icons.fastfood_outlined,
-                              color: AppTheme.primary, size: 22),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(item.name,
-                          style: AppTheme.cardTitle.copyWith(fontSize: 13),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => onRateTap(item),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 7),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.star_outline,
-                                size: 14, color: AppTheme.white),
-                            const SizedBox(width: 4),
-                            Text('Rate',
-                                style: AppTheme.cardTitle.copyWith(
-                                    color: AppTheme.white, fontSize: 12)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Status Card
-// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────/ ─────────────────────────────────────────────
 
 class _StatusCard extends StatelessWidget {
   final Transaction transaction;
@@ -845,279 +712,6 @@ class _SectionCard extends StatelessWidget {
           const SizedBox(height: 16),
           child,
         ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Rating Sheet
-// ─────────────────────────────────────────────
-
-class _RatingSheet extends StatefulWidget {
-  final TransactionItem item;
-
-  const _RatingSheet({required this.item});
-
-  @override
-  State<_RatingSheet> createState() => _RatingSheetState();
-}
-
-class _RatingSheetState extends State<_RatingSheet> {
-  int _rating = 0;
-  final TextEditingController _reviewCtrl = TextEditingController();
-
-  @override
-  void dispose() {
-    _reviewCtrl.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    if (_rating == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a rating',
-              style: AppTheme.bodyStyle
-                  .copyWith(color: AppTheme.white, fontSize: 14)),
-          backgroundColor: Colors.orange.shade600,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-      return;
-    }
-    context.read<RatingBloc>().add(CreateRatingEvent(
-          foodId: widget.item.id,
-          rating: _rating,
-          review: _reviewCtrl.text.trim(),
-        ));
-  }
-
-  String _ratingLabel(int rating) {
-    switch (rating) {
-      case 1:
-        return 'Very Bad';
-      case 2:
-        return 'Bad';
-      case 3:
-        return 'Okay';
-      case 4:
-        return 'Good';
-      case 5:
-        return 'Excellent!';
-      default:
-        return 'Tap a star to rate';
-    }
-  }
-
-  Color _ratingColor(int rating) {
-    switch (rating) {
-      case 1:
-      case 2:
-        return Colors.red.shade400;
-      case 3:
-        return Colors.orange.shade400;
-      case 4:
-      case 5:
-        return Colors.amber.shade600;
-      default:
-        return Colors.grey.shade400;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<RatingBloc, RatingState>(
-      listener: (context, state) {
-        if (state is RatingSuccess) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Successfully rate food',
-                  style: AppTheme.bodyStyle
-                      .copyWith(color: AppTheme.white, fontSize: 14)),
-              backgroundColor: Colors.green.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.all(16),
-            ),
-          );
-        } else if (state is RatingError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message,
-                  style: AppTheme.bodyStyle
-                      .copyWith(color: AppTheme.white, fontSize: 14)),
-              backgroundColor: Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.all(16),
-            ),
-          );
-        }
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-          color: AppTheme.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        padding: EdgeInsets.fromLTRB(
-          24,
-          20,
-          24,
-          MediaQuery.of(context).viewInsets.bottom + 32,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    widget.item.imageUrl,
-                    width: 56,
-                    height: 56,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: AppTheme.fourtenary,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.fastfood_outlined,
-                          color: AppTheme.primary, size: 26),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.item.name,
-                          style: AppTheme.cardTitle.copyWith(fontSize: 15),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
-                      const SizedBox(height: 4),
-                      Text('Share your experience',
-                          style: AppTheme.cardBody.copyWith(
-                              color: Colors.grey.shade500, fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Stars
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                final starIndex = index + 1;
-                return GestureDetector(
-                  onTap: () => setState(() => _rating = starIndex),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Icon(
-                      starIndex <= _rating ? Icons.star : Icons.star_border,
-                      size: starIndex <= _rating ? 40 : 34,
-                      color: starIndex <= _rating
-                          ? Colors.amber.shade600
-                          : Colors.grey.shade300,
-                    ),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 8),
-
-            // Label
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: Text(
-                _ratingLabel(_rating),
-                key: ValueKey(_rating),
-                style: AppTheme.cardTitle.copyWith(
-                    fontSize: 14, color: _ratingColor(_rating)),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Review field
-            Container(
-              decoration: BoxDecoration(
-                color: AppTheme.fourtenary,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: TextField(
-                controller: _reviewCtrl,
-                maxLines: 3,
-                maxLength: 300,
-                style: AppTheme.cardTitle.copyWith(fontSize: 14),
-                decoration: InputDecoration(
-                  hintText: 'Write your review (optional)...',
-                  hintStyle: AppTheme.cardBody
-                      .copyWith(color: Colors.grey.shade400, fontSize: 13),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(16),
-                  counterStyle: AppTheme.cardBody
-                      .copyWith(color: Colors.grey.shade400, fontSize: 11),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Submit
-            BlocBuilder<RatingBloc, RatingState>(
-              builder: (context, state) {
-                final isLoading = state is RatingLoading;
-                return SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      disabledBackgroundColor:
-                          AppTheme.primary.withValues(alpha: 0.4),
-                      foregroundColor: AppTheme.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                      elevation: 0,
-                    ),
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white),
-                          )
-                        : Text('Submit Rating', style: AppTheme.buttonStyle),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
