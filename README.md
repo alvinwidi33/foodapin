@@ -1,16 +1,60 @@
-# foodapin
+# 🎯 Goals
 
-A new Flutter project.
+Develop a mobile food ordering application that allows users to browse food items, place orders, give reviews and ratings, and manage favorite foods, while enabling admins to manage food data efficiently.
 
-## Getting Started
+# 🛠 Stack
 
-This project is a starting point for a Flutter application.
+- Flutter
+- Dart
 
-A few resources to get you started if this is your first Flutter project:
+# ⚙ Architecture & Technologies
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- BLoC (State Management)
+- Dio (HTTP Client)
+- Clean Architecture
+- REST API
+- GitHub
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# 👤 Member
+
+1 person (self)
+
+# ⏳ Duration
+
+3 weeks
+
+# 💼 Self-Roles
+
+- Mobile Developer
+- UI Implementation
+- State Management Implementation
+- API Integration
+- Architecture Design (Clean Architecture)
+
+# 📱 Output
+A mobile Food Ordering Application developed using Flutter with Clean Architecture principles.
+
+## 👥 User Features:
+
+- Browse food menu
+- View food details
+- Add food to favorites (My Favorite)
+- Place food orders (cart)
+- Give ratings and reviews
+- Manage user profile
+
+## 👨‍💼 Admin Features:
+
+- Upload new food items
+- Edit food data
+- Delete food items
+- Manage profile
+- Manage all users
+
+# 🧠 Technical Implementation Highlights
+
+- Implemented Clean Architecture (Presentation, Domain, Data layers)
+- State management handled using BLoC pattern
+- API communication using Dio
+- Modular and scalable project structure
+- Separation of concerns for better maintainability
