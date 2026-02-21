@@ -17,7 +17,6 @@ import 'package:foodapin/features/admin/foods/bloc/foods_bloc.dart';
 import 'package:foodapin/features/admin/transactions/bloc/all_transactions/transactions_bloc.dart';
 import 'package:foodapin/features/admin/transactions/bloc/update_status/update_status_bloc.dart';
 import 'package:foodapin/features/admin/update_food/bloc/detail_update/detail_update_food_bloc.dart';
-import 'package:foodapin/features/admin/update_food/bloc/update/update_food_event.dart';
 import 'package:foodapin/features/admin/update_food/bloc/update/update_food_state.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
@@ -34,7 +33,7 @@ import 'package:foodapin/features/user/my-favourite/bloc/my_fav_bloc.dart';
 import 'package:foodapin/features/user/transaction_detail/bloc/rating/rating_bloc.dart';
 import 'package:foodapin/features/user/transaction_detail/bloc/transaction/transaction_detail_bloc.dart';
 import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
   final CartRepository cartRepository;
@@ -60,21 +59,21 @@ class MyApp extends StatelessWidget {
   @override
 Widget build(BuildContext context) {
   return BlocBuilder<AuthCubit, AuthState>(
-    builder: (context, authState) {
-      return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider.value(value: authRepository),
-          RepositoryProvider.value(value: cartRepository),
-          RepositoryProvider.value(value: foodRepository),
-          RepositoryProvider.value(value: paymentMethodRepository),
-          RepositoryProvider.value(value: ratingRepository),
-          RepositoryProvider.value(value: transactionRepository),
-          RepositoryProvider.value(value: userRepository),
-          RepositoryProvider.value(value: uploadRepository)
-        ],
-        child: MultiBlocProvider(
+      builder: (context, authState) {
+        return MultiRepositoryProvider(
           providers: [
-            BlocProvider(
+            RepositoryProvider.value(value: authRepository),
+            RepositoryProvider.value(value: cartRepository),
+            RepositoryProvider.value(value: foodRepository),
+            RepositoryProvider.value(value: paymentMethodRepository),
+            RepositoryProvider.value(value: ratingRepository),
+            RepositoryProvider.value(value: transactionRepository),
+            RepositoryProvider.value(value: userRepository),
+            RepositoryProvider.value(value: uploadRepository),
+          ],
+          child: MultiBlocProvider(
+            providers: [
+                          BlocProvider(
               create: (_) => SignInBloc(
                 authRepository: authRepository,
                 userRepository: userRepository,
@@ -162,19 +161,18 @@ Widget build(BuildContext context) {
               create: (context) => UpdateProfileBloc(userRepository: userRepository),
             ),
           ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            initialRoute: '/signin',
-            onGenerateRoute: (settings) {
-            final authState = context.read<AuthCubit>().state;
-            return AppRoutes(authState).onGenerateRoute(settings);
-          },
+            child: MaterialApp(
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              onGenerateRoute: (settings) {
+                final authState = context.read<AuthCubit>().state;
+                return AppRoutes(authState).onGenerateRoute(settings);
+              },
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
 }
-
 }

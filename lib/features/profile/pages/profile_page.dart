@@ -4,14 +4,11 @@ import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/components/navbar.dart';
 import 'package:foodapin/components/navbar_admin.dart';
 import 'package:foodapin/data/models/users.dart';
-import 'package:foodapin/data/repositories/auth_repository/auth_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
+import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/profile/bloc/current/current_user_bloc.dart';
 import 'package:foodapin/features/profile/bloc/current/current_user_event.dart';
 import 'package:foodapin/features/profile/bloc/current/current_user_state.dart';
-import 'package:foodapin/features/profile/bloc/signout/signout_bloc.dart';
-import 'package:foodapin/features/profile/bloc/signout/signout_event.dart';
-import 'package:foodapin/features/profile/bloc/signout/signout_state.dart';
 import 'package:lottie/lottie.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -31,9 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
               CurrentUserBloc(userRepository: context.read<UserRepository>())
                 ..add(GetCurrentUser()),
         ),
-        BlocProvider(
-          create: (context) => SignOutBloc(context.read<AuthRepository>()),
-        ),
       ],
       child: const _ProfileView(),
     );
@@ -45,32 +39,7 @@ class _ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignOutBloc, SignOutState>(
-      listener: (context, state) {
-        if (state is SignOutSuccess) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/signin',
-            (route) => false,
-          );
-        } else if (state is SignOutFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.message,
-                style: AppTheme.bodyStyle
-                    .copyWith(fontSize: 14, color: AppTheme.white),
-              ),
-              backgroundColor: Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              margin: const EdgeInsets.all(16),
-            ),
-          );
-        }
-      },
-      child: BlocBuilder<CurrentUserBloc, CurrentUserState>(
+    return BlocBuilder<CurrentUserBloc, CurrentUserState>(
         builder: (context, state) {
           final role = state is CurrentUserLoaded ? state.user.role : 'user';
           final isAdmin = role == 'admin';
@@ -119,7 +88,6 @@ class _ProfileView extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 
@@ -598,45 +566,36 @@ class _LogoutSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              BlocBuilder<SignOutBloc, SignOutState>(
-                bloc: parentContext.read<SignOutBloc>(),
-                builder: (_, state) {
-                  final isLoading = state is SignOutLoading;
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                              Navigator.pop(context);
-                              parentContext
-                                  .read<SignOutBloc>()
-                                  .add(SignOutRequested());
-                            },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primary,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Center(
-                          child: isLoading
-                              ? SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true),
-                                )
-                              : Text(
-                                  'Sign Out',
-                                  style: AppTheme.cardTitle.copyWith(
-                                    color: AppTheme.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(context);
+
+                    await parentContext.read<AuthCubit>().logout();
+
+                    Navigator.pushNamedAndRemoveUntil(
+                      parentContext,
+                      '/signin',
+                      (route) => false,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Sign Out',
+                        style: AppTheme.cardTitle.copyWith(
+                          color: AppTheme.white,
+                          fontSize: 14,
                         ),
                       ),
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ],
           ),

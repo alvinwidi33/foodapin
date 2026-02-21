@@ -24,7 +24,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
         statusCode: e.response?.statusCode,
       );
     } catch (_) {
-      return ApiResponse.error('Unexpected error');
+      print("ayam");
+      return ApiResponse.error('Unexpected error transaction');
     }
   }
 
@@ -125,7 +126,7 @@ Future<ApiResponse<void>> createTransaction({
   }
 
   @override
-  Future<ApiResponse<Transaction>> uploadProofPayment({
+  Future<ApiResponse<void>> uploadProofPayment({
     required String transactionId,
     required String proofPaymentUrl,
   }) async {
@@ -137,10 +138,8 @@ Future<ApiResponse<void>> createTransaction({
         },
       );
 
-      final transaction = Transaction.fromJson(res.data['data']);
-
       return ApiResponse.success(
-        transaction,
+        null,
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {

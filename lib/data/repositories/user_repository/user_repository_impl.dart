@@ -56,8 +56,8 @@ class UserRepositoryImpl implements UserRepository {
         data: {
           'name': user.name,
           'email': user.email,
-          'phone_number': user.phoneNumber,
-          'profile_picture_url': user.profilePictureUrl,
+          'phoneNumber': user.phoneNumber,
+          'profilePictureUrl': user.profilePictureUrl,
         },
       );
 
