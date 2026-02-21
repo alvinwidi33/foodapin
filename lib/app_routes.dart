@@ -5,12 +5,14 @@ import 'package:foodapin/features/admin/detail_food_admin/pages/detail_food_admi
 import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
 import 'package:foodapin/features/admin/transactions/pages/all_transactions_page.dart';
 import 'package:foodapin/features/admin/update_food/pages/update_food_page.dart';
+import 'package:foodapin/features/admin/users/pages/users_page.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
 import 'package:foodapin/features/profile/pages/profile_page.dart';
 import 'package:foodapin/features/update_profile/pages/update_profile_page.dart';
 import 'package:foodapin/features/user/detail_food/page/detail_food_page.dart';
+import 'package:foodapin/features/user/detail_food/page/review_all_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
 import 'package:foodapin/features/user/my_cart/pages/cart_page.dart';
 import 'package:foodapin/features/user/my-favourite/pages/my_fav_page.dart';
@@ -52,10 +54,7 @@ class AppRoutes {
       return MaterialPageRoute(builder: (_) => const HomePage());
 
     case '/detail-food':
-      return MaterialPageRoute(
-        builder: (_) => const DetailFoodPage(),
-        settings: settings,
-      );
+      return MaterialPageRoute(builder: (_) => const DetailFoodPage(), settings: settings);
 
     case '/my-cart':
       return MaterialPageRoute(builder: (_) => const CartPage());
@@ -64,10 +63,7 @@ class AppRoutes {
       return MaterialPageRoute(builder: (_) => const TransactionPage());
 
     case '/my-transaction-detail':
-      return MaterialPageRoute(
-        builder: (_) => const TransactionDetailPage(),
-        settings: settings,
-      );
+      return MaterialPageRoute(builder: (_) => const TransactionDetailPage(), settings: settings);
 
     case '/my-likes':
       return MaterialPageRoute(builder: (_) => const MyFavPage());
@@ -92,6 +88,12 @@ class AppRoutes {
     
     case '/update-profile':
       return MaterialPageRoute(builder: (_) => UpdateProfilePage(user: settings.arguments as Users));
+
+    case '/review-all':
+      return MaterialPageRoute(builder: (_) => ReviewAllPage(), settings: settings);
+
+    case '/users':
+      return MaterialPageRoute(builder: (_) => UsersPage());
 
     default:
       return MaterialPageRoute(
