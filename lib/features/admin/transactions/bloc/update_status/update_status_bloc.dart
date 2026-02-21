@@ -24,8 +24,8 @@ class UpdateTransactionStatusBloc
       status: event.status,
     );
 
-    if (response.success && response.data != null) {
-      emit(UpdateTransactionStatusSuccess(response.data!));
+    if (response.success) {
+      emit(UpdateTransactionStatusSuccess());
     } else {
       emit(
         UpdateTransactionStatusFailure(

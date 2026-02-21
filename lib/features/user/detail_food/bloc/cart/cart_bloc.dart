@@ -54,7 +54,6 @@ Future<void> _onAdd(
       return;
     }
 
-    // Step 3: Find matching cart
     final matchingCarts = fetchResponse.data!
         .where((cart) => cart.foodId == event.foodId)
         .toList();

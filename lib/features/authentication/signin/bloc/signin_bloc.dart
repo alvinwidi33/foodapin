@@ -13,7 +13,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     required this.userRepository,
   }) : super(SignInInitial()) {
     on<SignInWithEmailEvent>(_onSignIn);
-    on<SignOutEvent>(_onSignOut);
   }
 
   Future<void> _onSignIn(
@@ -45,11 +44,4 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   emit(SignInSuccess(userResult.data!));
   }
 
-  Future<void> _onSignOut(
-    SignOutEvent event,
-    Emitter<SignInState> emit,
-  ) async {
-    await authRepository.signOut();
-    emit(SignInInitial());
-  }
 }

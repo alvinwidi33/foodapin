@@ -50,7 +50,6 @@ class Foods {
     );
   }
 
-  // ✅ Helper static method
   static List<String> _parseIngredients(dynamic value) {
     if (value == null) return [];
     

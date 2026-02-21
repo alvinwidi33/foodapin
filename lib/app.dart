@@ -15,19 +15,24 @@ import 'package:foodapin/features/admin/detail_food_admin/bloc/delete/delete_foo
 import 'package:foodapin/features/admin/detail_food_admin/bloc/detail/detail_food_admin_bloc.dart';
 import 'package:foodapin/features/admin/foods/bloc/foods_bloc.dart';
 import 'package:foodapin/features/admin/transactions/bloc/all_transactions/transactions_bloc.dart';
+import 'package:foodapin/features/admin/transactions/bloc/update_status/update_status_bloc.dart';
 import 'package:foodapin/features/admin/update_food/bloc/detail_update/detail_update_food_bloc.dart';
+import 'package:foodapin/features/admin/update_food/bloc/update/update_food_event.dart';
 import 'package:foodapin/features/admin/update_food/bloc/update/update_food_state.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_cubit.dart';
 import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/bloc/signin_bloc.dart';
 import 'package:foodapin/features/authentication/signup/bloc/signup_bloc.dart';
+import 'package:foodapin/features/profile/bloc/current/current_user_bloc.dart';
+import 'package:foodapin/features/update_profile/bloc/update_profile_bloc.dart';
 import 'package:foodapin/features/user/detail_food/bloc/detail_food/detail_food_bloc.dart';
 import 'package:foodapin/features/user/home/bloc/home_bloc.dart';
 import 'package:foodapin/features/user/my_cart/cart_bloc/cart_bloc.dart';
 import 'package:foodapin/features/user/my_cart/create_transaction_bloc/create_transaction_bloc.dart';
 import 'package:foodapin/features/user/my_cart/payment_method_bloc/payment_method_bloc.dart';
 import 'package:foodapin/features/user/my-favourite/bloc/my_fav_bloc.dart';
-import 'package:foodapin/features/user/transaction_detail/bloc/transaction_detail_bloc.dart';
+import 'package:foodapin/features/user/transaction_detail/bloc/rating/rating_bloc.dart';
+import 'package:foodapin/features/user/transaction_detail/bloc/transaction/transaction_detail_bloc.dart';
 import 'package:foodapin/features/user/transaction/bloc/transaction_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -140,6 +145,21 @@ Widget build(BuildContext context) {
             ),
             BlocProvider<TransactionsBloc>(
               create: (context) => TransactionsBloc(transactionRepository: transactionRepository),
+            ),
+            BlocProvider<TransactionDetailBloc>(
+              create: (context) => TransactionDetailBloc(transactionRepository: transactionRepository, uploadRepository: uploadRepository),
+            ),
+            BlocProvider<CurrentUserBloc>(
+              create: (context) => CurrentUserBloc(userRepository: userRepository),
+            ),
+            BlocProvider<RatingBloc>(
+              create: (context) => RatingBloc(ratingRepository: ratingRepository),
+            ),
+            BlocProvider<UpdateTransactionStatusBloc>(
+              create: (context) => UpdateTransactionStatusBloc(transactionRepository: transactionRepository),
+            ),
+            BlocProvider<UpdateProfileBloc>(
+              create: (context) => UpdateProfileBloc(userRepository: userRepository),
             ),
           ],
           child: MaterialApp(

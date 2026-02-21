@@ -49,9 +49,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<ApiResponse<Users>> updateProfile(Users user) async {
+  Future<ApiResponse<void>> updateProfile(Users user) async {
     try {
-      final res = await dio.put(
+      final res = await dio.post(
         '/update-profile',
         data: {
           'name': user.name,
@@ -62,7 +62,7 @@ class UserRepositoryImpl implements UserRepository {
       );
 
       return ApiResponse.success(
-        Users.fromJson(res.data['data']),
+       null,
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {
@@ -78,7 +78,7 @@ class UserRepositoryImpl implements UserRepository {
     required String role,
   }) async {
     try {
-      await dio.put(
+      await dio.post(
         '/update-user-role/$userId',
         data: {'role': role},
       );

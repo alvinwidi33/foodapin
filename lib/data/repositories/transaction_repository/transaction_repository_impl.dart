@@ -154,20 +154,18 @@ Future<ApiResponse<void>> createTransaction({
   }
 
   @override
-  Future<ApiResponse<Transaction>> updateTransactionStatus({
+  Future<ApiResponse<void>> updateTransactionStatus({
     required String transactionId,
     required String status,
   }) async {
     try {
-      final res = await dio.patch(
+      final res = await dio.post(
         '/update-transaction-status/$transactionId',
         data: {'status': status},
       );
 
-      final transaction = Transaction.fromJson(res.data['data']);
-
       return ApiResponse.success(
-        transaction,
+        null,
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {

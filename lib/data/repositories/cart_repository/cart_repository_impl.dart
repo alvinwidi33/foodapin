@@ -102,7 +102,6 @@ Future<ApiResponse<Cart?>> updateCartQuantity({
           errorMessage = responseData;
         }
       } else if (responseData is Map) {
-        // JSON response
         final msg = responseData['message'];
         errorMessage = msg?.toString() ?? errorMessage;
       }

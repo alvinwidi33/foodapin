@@ -36,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e) {
         final data = e.response?.data;
 
-        String message = 'Failed registering user';
+        String message = 'Failed signin user';
 
         if (data is Map && data['errors'] is List && data['errors'].isNotEmpty) {
           message = data['errors'][0]['message'] ?? message;
@@ -83,8 +83,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> signOut() async {
-    await tokenStorage.clear();
+  Future<ApiResponse<void>> signOut() async {
+    try {
+      final response = await dio.get('/logout');
+
+      await tokenStorage.clear();
+
+      return ApiResponse.success(
+        null,
+        statusCode: response.statusCode,
+      );
+    } on DioException catch (e) {
+      await tokenStorage.clear(); 
+
+      return ApiResponse.error(
+        e.response?.data?['message'] ?? 'Failed to logout',
+        statusCode: e.response?.statusCode,
+      );
+    } catch (_) {
+      await tokenStorage.clear();
+
+      return ApiResponse.error('Something went wrong');
+    }
   }
 
   @override
