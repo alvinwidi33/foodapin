@@ -11,7 +11,7 @@ abstract class TransactionRepository {
 });
   Future<ApiResponse<void>> cancelTransaction(String id);
 
-  Future<ApiResponse<Transaction>> uploadProofPayment({
+  Future<ApiResponse<void>> uploadProofPayment({
     required String transactionId,
     required String proofPaymentUrl,
   });

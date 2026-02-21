@@ -27,8 +27,8 @@ class Users {
       password: '',      
       passwordRepeat: '',  
       role: json['role'] ?? '',
-      profilePictureUrl: json['profile_picture_url'] ?? '',
-      phoneNumber: json['phone_number'] ?? '',
+      profilePictureUrl: json['profilePictureUrl'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
     );
   }
 
@@ -36,8 +36,8 @@ class Users {
     final data = <String, dynamic>{
       'name': name,
       'email': email,
-      'phone_number': phoneNumber,
-      'profile_picture_url': profilePictureUrl,
+      'phoneNumber': phoneNumber,
+      'profilePictureUrl': profilePictureUrl,
       'role': role,
     };
 

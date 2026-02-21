@@ -13,10 +13,14 @@ class UploadRepositoryImpl implements UploadRepository {
     try {
       final bytes = await file.readAsBytes();
 
-      FormData formData = FormData.fromMap({
+      final String filename = _resolveFilename(file);
+      final String mimeType = _resolveMimeType(filename);
+
+      final formData = FormData.fromMap({
         "image": MultipartFile.fromBytes(
           bytes,
-          filename: file.name,
+          filename: filename,
+          contentType: DioMediaType.parse(mimeType),
         ),
       });
 
@@ -35,6 +39,50 @@ class UploadRepositoryImpl implements UploadRepository {
       );
     } catch (e) {
       return ApiResponse.error("Unexpected error: $e");
+    }
+  }
+
+  String _resolveFilename(XFile file) {
+    final original = file.name.trim();
+
+    final supported = ['.jpg', '.jpeg', '.png', '.webp', '.svg'];
+    final lower = original.toLowerCase();
+    if (supported.any((ext) => lower.endsWith(ext))) {
+      return original;
+    }
+
+    if (file.mimeType != null) {
+      final ext = _extFromMime(file.mimeType!);
+      if (ext != null) {
+        final baseName = original.isNotEmpty ? original : 'image_${DateTime.now().millisecondsSinceEpoch}';
+        return '$baseName$ext';
+      }
+    }
+
+    final baseName = original.isNotEmpty ? original : 'image_${DateTime.now().millisecondsSinceEpoch}';
+    return '$baseName.jpg';
+  }
+
+  String _resolveMimeType(String filename) {
+    final lower = filename.toLowerCase();
+    if (lower.endsWith('.png')) return 'image/png';
+    if (lower.endsWith('.webp')) return 'image/webp';
+    if (lower.endsWith('.svg')) return 'image/svg+xml';
+    return 'image/jpeg';
+  }
+
+  String? _extFromMime(String mime) {
+    switch (mime.toLowerCase()) {
+      case 'image/jpeg':
+        return '.jpg';
+      case 'image/png':
+        return '.png';
+      case 'image/webp':
+        return '.webp';
+      case 'image/svg+xml':
+        return '.svg';
+      default:
+        return null;
     }
   }
 }
