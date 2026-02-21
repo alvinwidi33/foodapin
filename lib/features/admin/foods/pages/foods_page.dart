@@ -281,7 +281,6 @@ class _FoodsPageState extends State<FoodsPage> {
                                             ),
                                           ],
                                         ),
-                                        // Content
                                         Padding(
                                           padding: const EdgeInsets.all(12),
                                           child: Column(
@@ -314,7 +313,6 @@ class _FoodsPageState extends State<FoodsPage> {
                                                 ],
                                               ),
                                               const SizedBox(height: 6),
-                                              // Price
                                               Text(
                                                 food.price == null 
                                                     ? 'Free'
@@ -396,8 +394,10 @@ class _FoodsPageState extends State<FoodsPage> {
             if (index == 0) {
               Navigator.pushReplacementNamed(context, '/foods');
             } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/transactions');
+              Navigator.pushReplacementNamed(context, '/users');
             } else if (index == 2) {
+              Navigator.pushReplacementNamed(context, '/transactions');
+            } else if (index == 3) {
               Navigator.pushReplacementNamed(context, '/profile');
             }
           }

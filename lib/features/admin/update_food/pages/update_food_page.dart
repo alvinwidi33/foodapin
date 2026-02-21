@@ -115,7 +115,7 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
       text: food.priceDiscount != null ? food.priceDiscount.toString() : '',
     );
     _uploadedImageUrl = food.imageUrl.isNotEmpty ? food.imageUrl : null;
-    _ingredients = List<String>.from(food.ingredients ?? []);
+    _ingredients = List<String>.from(food.ingredients);
   }
 
   @override
@@ -421,9 +421,6 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
   }
 
   Widget _buildImagePicker() {
-    // Determine what image to show:
-    // 1. Newly picked local image (_selectedImage)
-    // 2. Existing image from network (_uploadedImageUrl from original food)
     final hasLocalImage = _selectedImage != null;
     final hasNetworkImage = !hasLocalImage && (_uploadedImageUrl != null && _uploadedImageUrl!.isNotEmpty);
 
@@ -447,7 +444,6 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
               ? Stack(
                   fit: StackFit.expand,
                   children: [
-                    // Show image
                     if (hasLocalImage)
                       kIsWeb
                           ? Image.network(_selectedImage!.path, fit: BoxFit.cover)
@@ -462,7 +458,6 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
                         ),
                       ),
 
-                    // Upload overlay
                     if (_isUploadingImage)
                       Container(
                         color: Colors.black.withValues(alpha: 0.45),
@@ -479,7 +474,6 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
                         ),
                       ),
 
-                    // Change button
                     Positioned(
                       bottom: 10,
                       right: 10,

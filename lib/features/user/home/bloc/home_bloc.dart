@@ -141,7 +141,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     final current = state as HomeLoaded;
 
-    // Optimistic update dulu
     final updatedAllFoods = current.allFoods.map((food) {
       if (food.id.toString() == event.foodId) {
         return food.copyWith(

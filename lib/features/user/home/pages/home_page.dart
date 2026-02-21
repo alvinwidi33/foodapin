@@ -266,7 +266,6 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                               ),
                                             ),
-                                            // Love button
                                             Positioned(
                                               top: 8,
                                               right: 8,
@@ -310,7 +309,6 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ],
                                         ),
-                                        // Content
                                         Padding(
                                           padding: const EdgeInsets.all(12),
                                           child: Column(
@@ -343,7 +341,6 @@ class _HomePageState extends State<HomePage> {
                                                 ],
                                               ),
                                               const SizedBox(height: 6),
-                                              // Price
                                               Text(
                                                 food.price == null 
                                                     ? 'Free'
@@ -487,7 +484,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             ),
           ),
           
-          // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -506,8 +502,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
           ),
           
           const Divider(),
-          
-          // Sort Options
           Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -519,7 +513,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                 ),
                 const SizedBox(height: 16),
                 
-                // Sort options list
                 ..._sortOptions.entries.map((entry) {
                   return RadioListTile<String>(
                     value: entry.key,
@@ -541,12 +534,10 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             ),
           ),
           
-          // Action Buttons
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             child: Row(
               children: [
-                // Clear button
                 Expanded(
                   child: OutlinedButton(
                     onPressed: widget.onClearFilter,
@@ -566,8 +557,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                
-                // Apply button
                 Expanded(
                   child: Container(
                     decoration: AppTheme.buttonDecorationPrimary,

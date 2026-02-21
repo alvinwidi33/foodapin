@@ -15,15 +15,14 @@ import 'package:intl/intl.dart';
 class AllTransactionsPage extends StatelessWidget {
   const AllTransactionsPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              TransactionsBloc(transactionRepository: context.read<TransactionRepository>())
-                ..add(FetchTransactions()),
+          create: (context) => TransactionsBloc(
+            transactionRepository: context.read<TransactionRepository>(),
+          )..add(FetchTransactions()),
         ),
         BlocProvider(
           create: (context) => UpdateTransactionStatusBloc(
@@ -45,15 +44,9 @@ class _AllTransactionsView extends StatefulWidget {
 
 class _AllTransactionsViewState extends State<_AllTransactionsView> {
   String _selectedFilter = 'All';
-    final int _currentIndex = 2;
-  final List<String> _filters = [
-    'All',
-    'pending',
-    'paid',
-    'processing',
-    'completed',
-    'cancelled',
-  ];
+  final int _currentIndex = 2;
+
+  final List<String> _filters = ['All', 'pending', 'success', 'cancelled'];
 
   List<Transaction> _applyFilter(List<Transaction> transactions) {
     if (_selectedFilter == 'All') return transactions;
@@ -65,13 +58,14 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
   void _showSnackbar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: AppTheme.bodyStyle.copyWith(fontSize: 14, color: AppTheme.white),
-        ),
-        backgroundColor: isError ? Colors.red.shade600 : Colors.green.shade600,
+        content: Text(message,
+            style: AppTheme.bodyStyle
+                .copyWith(fontSize: 14, color: AppTheme.white)),
+        backgroundColor:
+            isError ? Colors.red.shade600 : Colors.green.shade600,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
       ),
     );
@@ -81,10 +75,11 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width * 0.92;
 
-    return BlocListener<UpdateTransactionStatusBloc, UpdateTransactionStatusState>(
+    return BlocListener<UpdateTransactionStatusBloc,
+        UpdateTransactionStatusState>(
       listener: (context, state) {
         if (state is UpdateTransactionStatusSuccess) {
-          _showSnackbar('Status berhasil diperbarui!');
+          _showSnackbar('Status update failed');
           context.read<TransactionsBloc>().add(RefreshTransactions());
         } else if (state is UpdateTransactionStatusFailure) {
           _showSnackbar(state.message, isError: true);
@@ -117,11 +112,8 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 18,
-                            color: AppTheme.primary,
-                          ),
+                          child: const Icon(Icons.arrow_back_ios_new,
+                              size: 18, color: AppTheme.primary),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -143,17 +135,15 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.black.withValues(alpha: 0.08),
+                                    color:
+                                        AppTheme.black.withValues(alpha: 0.08),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              child: const Icon(
-                                Icons.refresh,
-                                size: 18,
-                                color: AppTheme.primary,
-                              ),
+                              child: const Icon(Icons.refresh,
+                                  size: 18, color: AppTheme.primary),
                             ),
                           );
                         },
@@ -171,17 +161,21 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                         final filter = _filters[index];
                         final isSelected = _selectedFilter == filter;
                         return GestureDetector(
-                          onTap: () => setState(() => _selectedFilter = filter),
+                          onTap: () =>
+                              setState(() => _selectedFilter = filter),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppTheme.primary : AppTheme.white,
+                              color: isSelected
+                                  ? AppTheme.primary
+                                  : AppTheme.white,
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.black.withValues(alpha: 0.06),
+                                  color:
+                                      AppTheme.black.withValues(alpha: 0.06),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -190,8 +184,9 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                             child: Text(
                               filter == 'All' ? 'All' : _capitalize(filter),
                               style: AppTheme.cardTitle.copyWith(
-                                color:
-                                    isSelected ? AppTheme.white : AppTheme.black,
+                                color: isSelected
+                                    ? AppTheme.white
+                                    : AppTheme.black,
                                 fontSize: 13,
                               ),
                             ),
@@ -232,7 +227,9 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
                               padding: const EdgeInsets.only(bottom: 24),
                               itemBuilder: (context, index) {
                                 return _TransactionCard(
-                                    transaction: filtered[index]);
+                                  key: ValueKey(filtered[index].id),
+                                  transaction: filtered[index],
+                                );
                               },
                             ),
                           );
@@ -247,22 +244,22 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
           ),
         ),
         bottomNavigationBar: SafeArea(
-        child:CurvedBottomNavBarAdmin(
-          currentIndex: _currentIndex, 
-          onTap: (index){
-            if (index == _currentIndex) return;
-            if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/foods');
-            } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/users');
-            } else if (index == 2) {
-              Navigator.pushReplacementNamed(context, '/transactions'); 
-            } else if (index == 3) {
-              Navigator.pushReplacementNamed(context, '/profile');
-            }
-          }
-        ) ,
-      ),
+          child: CurvedBottomNavBarAdmin(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              if (index == _currentIndex) return;
+              if (index == 0) {
+                Navigator.pushReplacementNamed(context, '/foods');
+              } else if (index == 1) {
+                Navigator.pushReplacementNamed(context, '/users');
+              } else if (index == 2) {
+                Navigator.pushReplacementNamed(context, '/transactions');
+              } else if (index == 3) {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }
+            },
+          ),
+        ),
       ),
     );
   }
@@ -274,7 +271,8 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
         children: [
           const Icon(Icons.error_outline, color: Colors.red, size: 48),
           const SizedBox(height: 12),
-          Text(message, style: AppTheme.bodyStyle, textAlign: TextAlign.center),
+          Text(message,
+              style: AppTheme.bodyStyle, textAlign: TextAlign.center),
           const SizedBox(height: 16),
           ElevatedButton(
             style:
@@ -319,14 +317,10 @@ class _AllTransactionsViewState extends State<_AllTransactionsView> {
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }
 
-// ─────────────────────────────────────────────
-// Transaction Card
-// ─────────────────────────────────────────────
-
 class _TransactionCard extends StatefulWidget {
   final Transaction transaction;
 
-  const _TransactionCard({required this.transaction});
+  const _TransactionCard({required super.key, required this.transaction});
 
   @override
   State<_TransactionCard> createState() => _TransactionCardState();
@@ -335,11 +329,16 @@ class _TransactionCard extends StatefulWidget {
 class _TransactionCardState extends State<_TransactionCard> {
   bool _isExpanded = false;
 
-  static const List<String> _statusOptions = [
-    'pending',
-    'success',
-    'cancelled',
-  ];
+  late String _localStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _localStatus = widget.transaction.status;
+  }
+
+  static const List<String> _statusOptions = ['pending', 'success', 'cancelled'];
+
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
@@ -376,124 +375,133 @@ class _TransactionCardState extends State<_TransactionCard> {
   String _capitalize(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
+  void _changeStatus(BuildContext context, String newStatus) {
+    final previousStatus = _localStatus;
+    setState(() => _localStatus = newStatus);
+    context.read<UpdateTransactionStatusBloc>().add(
+          SubmitUpdateTransactionStatus(
+            transactionId: widget.transaction.id,
+            status: newStatus,
+          ),
+        );
+    _previousStatus = previousStatus;
+  }
+
+  String _previousStatus = '';
+
   void _showUpdateStatusSheet(BuildContext pageContext) {
-    final tx = widget.transaction;
     showModalBottomSheet(
       context: pageContext,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (sheetContext) {
-        return BlocConsumer<UpdateTransactionStatusBloc,
-            UpdateTransactionStatusState>(
-          bloc: pageContext.read<UpdateTransactionStatusBloc>(),
-          listener: (_, state) {
-            // Sheet auto-dismissed on tap; nothing extra needed here
-          },
-          builder: (_, state) {
-            final isLoading = state is UpdateTransactionStatusLoading;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Handle bar
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('Update Status',
-                      style: AppTheme.headingStyle.copyWith(fontSize: 18)),
-                  const SizedBox(height: 4),
-                  Text(
-                    tx.invoiceId,
-                    style: AppTheme.cardBody.copyWith(
-                        color: Colors.grey.shade500, fontSize: 12),
-                  ),
-                  const SizedBox(height: 16),
-                  if (isLoading)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child:
-                            CircularProgressIndicator(color: AppTheme.primary),
-                      ),
-                    )
-                  else
-                    ..._statusOptions.map((status) {
-                      final isCurrent =
-                          tx.status.toLowerCase() == status;
-                      final color = _statusColor(status);
-                      return GestureDetector(
-                        onTap: isCurrent
-                            ? null
-                            : () {
-                                Navigator.pop(sheetContext);
-                                pageContext
-                                    .read<UpdateTransactionStatusBloc>()
-                                    .add(
-                                      SubmitUpdateTransactionStatus(
-                                        transactionId: tx.id,
-                                        status: status,
-                                      ),
-                                    );
-                              },
+        return StatefulBuilder(
+          builder: (_, setSheetState) {
+            return BlocConsumer<UpdateTransactionStatusBloc,
+                UpdateTransactionStatusState>(
+              bloc: pageContext.read<UpdateTransactionStatusBloc>(),
+              listener: (_, __) {},
+              builder: (_, state) {
+                final isLoading = state is UpdateTransactionStatusLoading;
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
                         child: Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 14),
+                          width: 40,
+                          height: 4,
                           decoration: BoxDecoration(
-                            color: isCurrent
-                                ? color.withValues(alpha: 0.12)
-                                : AppTheme.fourtenary,
-                            borderRadius: BorderRadius.circular(14),
-                            border: isCurrent
-                                ? Border.all(color: color, width: 1.5)
-                                : Border.all(color: Colors.transparent),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(_statusIcon(status),
-                                  size: 18, color: color),
-                              const SizedBox(width: 12),
-                              Text(
-                                _capitalize(status),
-                                style: AppTheme.cardTitle.copyWith(
-                                  color:
-                                      isCurrent ? color : AppTheme.black,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const Spacer(),
-                              if (isCurrent)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: color.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    'Current',
-                                    style: AppTheme.cardBody.copyWith(
-                                        color: color, fontSize: 11),
-                                  ),
-                                ),
-                            ],
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                      );
-                    }),
-                ],
-              ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text('Update Status',
+                          style:
+                              AppTheme.headingStyle.copyWith(fontSize: 18)),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.transaction.invoiceId,
+                        style: AppTheme.cardBody.copyWith(
+                            color: Colors.grey.shade500, fontSize: 12),
+                      ),
+                      const SizedBox(height: 16),
+                      if (isLoading)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 24),
+                            child: CircularProgressIndicator(
+                                color: AppTheme.primary),
+                          ),
+                        )
+                      else
+                        ..._statusOptions.map((status) {
+                          final isCurrent = _localStatus.toLowerCase() == status;
+                          final color = _statusColor(status);
+                          return GestureDetector(
+                            onTap: isCurrent
+                                ? null
+                                : () {
+                                    Navigator.pop(sheetContext);
+                                    _changeStatus(pageContext, status);
+                                  },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
+                              decoration: BoxDecoration(
+                                color: isCurrent
+                                    ? color.withValues(alpha: 0.12)
+                                    : AppTheme.fourtenary,
+                                borderRadius: BorderRadius.circular(14),
+                                border: isCurrent
+                                    ? Border.all(color: color, width: 1.5)
+                                    : Border.all(color: Colors.transparent),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(_statusIcon(status),
+                                      size: 18, color: color),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    _capitalize(status),
+                                    style: AppTheme.cardTitle.copyWith(
+                                      color: isCurrent
+                                          ? color
+                                          : AppTheme.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  if (isCurrent)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: color.withValues(alpha: 0.15),
+                                        borderRadius:
+                                            BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        'Current',
+                                        style: AppTheme.cardBody.copyWith(
+                                            color: color, fontSize: 11),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                    ],
+                  ),
+                );
+              },
             );
           },
         );
@@ -504,247 +512,298 @@ class _TransactionCardState extends State<_TransactionCard> {
   @override
   Widget build(BuildContext context) {
     final tx = widget.transaction;
-    final statusColor = _statusColor(tx.status);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.black.withValues(alpha: 0.07),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+    return BlocListener<UpdateTransactionStatusBloc,
+        UpdateTransactionStatusState>(
+      listener: (context, state) {
+        if (state is UpdateTransactionStatusFailure && _previousStatus.isNotEmpty) {
+          setState(() => _localStatus = _previousStatus);
+        }
+      },
+      child: Builder(builder: (context) {
+        final statusColor = _statusColor(_localStatus);
+        final isPending = _localStatus.toLowerCase() == 'pending';
+
+        return Container(
+          decoration: BoxDecoration(
+            color: AppTheme.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.black.withValues(alpha: 0.07),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // ── Main Info ──
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Invoice + tappable status badge
-                Row(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            tx.invoiceId,
-                            style: AppTheme.cardTitle.copyWith(
-                                fontSize: 13, color: AppTheme.primary),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            _formatDate(tx.orderDate),
-                            style: AppTheme.cardBody.copyWith(
-                                color: Colors.grey.shade500, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Tap to open update sheet
-                    GestureDetector(
-                      onTap: () => _showUpdateStatusSheet(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: statusColor.withValues(alpha: 0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(_statusIcon(tx.status),
-                                size: 12, color: statusColor),
-                            const SizedBox(width: 4),
-                            Text(
-                              _capitalize(tx.status),
-                              style: AppTheme.cardTitle.copyWith(
-                                  color: statusColor, fontSize: 12),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(Icons.expand_more,
-                                size: 14, color: statusColor),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Divider(color: Colors.grey.shade100, height: 1),
-                const SizedBox(height: 12),
-                // Payment method + total
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppTheme.fourtenary,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.account_balance_outlined,
-                              size: 14, color: AppTheme.primary),
-                          const SizedBox(width: 6),
-                          Text(
-                            tx.paymentMethod.name,
-                            style: AppTheme.cardTitle.copyWith(
-                                fontSize: 12, color: AppTheme.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    Row(
                       children: [
-                        Text(
-                          'Total',
-                          style: AppTheme.cardBody.copyWith(
-                              color: Colors.grey.shade500, fontSize: 11),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tx.invoiceId,
+                                style: AppTheme.cardTitle.copyWith(
+                                    fontSize: 13, color: AppTheme.primary),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _formatDate(tx.orderDate),
+                                style: AppTheme.cardBody.copyWith(
+                                    color: Colors.grey.shade500, fontSize: 12),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          _formatCurrency(tx.totalAmount),
-                          style: AppTheme.cardTitle
-                              .copyWith(fontSize: 15, color: AppTheme.black),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => _showUpdateStatusSheet(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: statusColor.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: statusColor.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(_statusIcon(_localStatus),
+                                    size: 12, color: statusColor),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _capitalize(_localStatus),
+                                  style: AppTheme.cardTitle.copyWith(
+                                      color: statusColor, fontSize: 12),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(Icons.expand_more,
+                                    size: 14, color: statusColor),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                // Items summary
-                Row(
-                  children: [
-                    Icon(Icons.shopping_bag_outlined,
-                        size: 14, color: Colors.grey.shade500),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${tx.items.length} item${tx.items.length > 1 ? 's' : ''}',
-                      style: AppTheme.cardBody.copyWith(
-                          color: Colors.grey.shade500, fontSize: 12),
+                    const SizedBox(height: 12),
+                    Divider(color: Colors.grey.shade100, height: 1),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: AppTheme.fourtenary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.account_balance_outlined,
+                                  size: 14, color: AppTheme.primary),
+                              const SizedBox(width: 6),
+                              Text(
+                                tx.paymentMethod.name,
+                                style: AppTheme.cardTitle.copyWith(
+                                    fontSize: 12, color: AppTheme.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('Total',
+                                style: AppTheme.cardBody.copyWith(
+                                    color: Colors.grey.shade500, fontSize: 11)),
+                            Text(
+                              _formatCurrency(tx.totalAmount),
+                              style: AppTheme.cardTitle
+                                  .copyWith(fontSize: 15, color: AppTheme.black),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 6),
-                    Text('·',
-                        style: AppTheme.cardBody
-                            .copyWith(color: Colors.grey.shade400)),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        tx.items.map((i) => i.name).join(', '),
-                        style: AppTheme.cardBody.copyWith(
-                            color: Colors.grey.shade600, fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(Icons.shopping_bag_outlined,
+                            size: 14, color: Colors.grey.shade500),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${tx.items.length} item${tx.items.length > 1 ? 's' : ''}',
+                          style: AppTheme.cardBody.copyWith(
+                              color: Colors.grey.shade500, fontSize: 12),
+                        ),
+                        const SizedBox(width: 6),
+                        Text('·',
+                            style: AppTheme.cardBody
+                                .copyWith(color: Colors.grey.shade400)),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            tx.items.map((i) => i.name).join(', '),
+                            style: AppTheme.cardBody.copyWith(
+                                color: Colors.grey.shade600, fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (tx.proofPaymentUrl != null &&
+                        tx.proofPaymentUrl!.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Icon(Icons.receipt_outlined,
+                              size: 14, color: Colors.green),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Proof of payment uploaded',
+                            style: AppTheme.cardBody.copyWith(
+                                color: Colors.green.shade600, fontSize: 12),
+                          ),
+                        ],
                       ),
-                    ),
+                    ],
+                    if (isPending) ...[
+                      const SizedBox(height: 12),
+                      BlocBuilder<UpdateTransactionStatusBloc,
+                          UpdateTransactionStatusState>(
+                        builder: (context, state) {
+                          final isLoading =
+                              state is UpdateTransactionStatusLoading;
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => _changeStatus(context, 'success'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.primary,
+                                disabledBackgroundColor:
+                                    AppTheme.primary.withValues(alpha: 0.4),
+                                foregroundColor: AppTheme.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 0,
+                              ),
+                              icon: isLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Icon(Icons.check_circle_outline,
+                                      size: 18),
+                              label: Text(
+                                isLoading ? 'Processing...' : 'Approve',
+                                style: AppTheme.cardTitle
+                                    .copyWith(color: AppTheme.white, fontSize: 14),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ],
                 ),
-                // Proof of payment badge
-                if (tx.proofPaymentUrl != null &&
-                    tx.proofPaymentUrl!.isNotEmpty) ...[
-                  const SizedBox(height: 10),
-                  Row(
+              ),
+              GestureDetector(
+                onTap: () => setState(() => _isExpanded = !_isExpanded),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.fourtenary,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(_isExpanded ? 0 : 16),
+                      bottomRight: Radius.circular(_isExpanded ? 0 : 16),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.receipt_outlined,
-                          size: 14, color: Colors.green),
-                      const SizedBox(width: 4),
                       Text(
-                        'Proof of payment uploaded',
-                        style: AppTheme.cardBody
-                            .copyWith(color: Colors.green.shade600, fontSize: 12),
+                        _isExpanded ? 'Hide Details' : 'View Details',
+                        style: AppTheme.cardTitle
+                            .copyWith(color: AppTheme.primary, fontSize: 13),
+                      ),
+                      const SizedBox(width: 4),
+                      AnimatedRotation(
+                        turns: _isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: const Icon(Icons.keyboard_arrow_down,
+                            size: 18, color: AppTheme.primary),
                       ),
                     ],
                   ),
-                ],
-              ],
-            ),
-          ),
-          // ── Expand Toggle ──
-          GestureDetector(
-            onTap: () => setState(() => _isExpanded = !_isExpanded),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: AppTheme.fourtenary,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(_isExpanded ? 0 : 16),
-                  bottomRight: Radius.circular(_isExpanded ? 0 : 16),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _isExpanded ? 'Hide Details' : 'View Details',
-                    style: AppTheme.cardTitle
-                        .copyWith(color: AppTheme.primary, fontSize: 13),
-                  ),
-                  const SizedBox(width: 4),
-                  AnimatedRotation(
-                    turns: _isExpanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: const Icon(Icons.keyboard_arrow_down,
-                        size: 18, color: AppTheme.primary),
-                  ),
-                ],
+              AnimatedSize(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                child: _isExpanded
+                    ? Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 12),
+                            Text('Order Items',
+                                style: AppTheme.titleDetail
+                                    .copyWith(fontSize: 13)),
+                            const SizedBox(height: 10),
+                            ...tx.items.map((item) => _buildItemRow(item)),
+                            const SizedBox(height: 12),
+                            Divider(color: Colors.grey.shade100),
+                            const SizedBox(height: 8),
+                            _buildDetailRow(
+                                'Order Date', _formatDate(tx.orderDate)),
+                            const SizedBox(height: 6),
+                            _buildDetailRow(
+                                'Expired Date', _formatDate(tx.expiredDate)),
+                            const SizedBox(height: 6),
+                            _buildDetailRow('User ID', tx.userId,
+                                isSmall: true),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
-            ),
+            ],
           ),
-          // ── Expanded Detail ──
-          AnimatedSize(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOut,
-            child: _isExpanded
-                ? Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-                        Text('Order Items',
-                            style: AppTheme.titleDetail.copyWith(fontSize: 13)),
-                        const SizedBox(height: 10),
-                        ...tx.items.map((item) => _buildItemRow(item)),
-                        const SizedBox(height: 12),
-                        Divider(color: Colors.grey.shade100),
-                        const SizedBox(height: 8),
-                        _buildDetailRow('Order Date', _formatDate(tx.orderDate)),
-                        const SizedBox(height: 6),
-                        _buildDetailRow(
-                            'Expired Date', _formatDate(tx.expiredDate)),
-                        const SizedBox(height: 6),
-                        _buildDetailRow('User ID', tx.userId, isSmall: true),
-                      ],
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-        ],
-      ),
+        );
+      }),
     );
   }
 

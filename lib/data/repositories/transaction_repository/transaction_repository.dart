@@ -16,7 +16,7 @@ abstract class TransactionRepository {
     required String proofPaymentUrl,
   });
 
-  Future<ApiResponse<Transaction>> updateTransactionStatus({
+  Future<ApiResponse<void>> updateTransactionStatus({
     required String transactionId,
     required String status,
   });

@@ -126,7 +126,6 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 12),
-                            // Header
                             Row(
                               children: [
                                 InkWell(
@@ -149,7 +148,6 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            // Image
                             Center(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -172,7 +170,6 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            // Name & Price
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -199,7 +196,6 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            // Rating & Likes
                             Row(
                               children: [
                                 if (food.rating != null) ...[
@@ -214,12 +210,10 @@ class _DetailFoodAdminPageState extends State<DetailFoodAdminPage> {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            // Description
                             Text("Description", style: AppTheme.titleDetail),
                             const SizedBox(height: 8),
                             Text(food.description, style: AppTheme.subtitleDetail),
                             const SizedBox(height: 16),
-                            // Ingredients
                             if (food.ingredients.isNotEmpty) ...[
                               Text("Ingredients", style: AppTheme.titleDetail),
                               const SizedBox(height: 8),

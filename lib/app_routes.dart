@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodapin/data/models/users.dart';
 import 'package:foodapin/features/admin/create_foods/pages/create_food_page.dart';
 import 'package:foodapin/features/admin/detail_food_admin/pages/detail_food_admin_page.dart';
 import 'package:foodapin/features/admin/foods/pages/foods_page.dart';
@@ -8,6 +9,7 @@ import 'package:foodapin/features/authentication/auth_cubit/auth_state.dart';
 import 'package:foodapin/features/authentication/signin/pages/signin_page.dart';
 import 'package:foodapin/features/authentication/signup/pages/signup_page.dart';
 import 'package:foodapin/features/profile/pages/profile_page.dart';
+import 'package:foodapin/features/update_profile/pages/update_profile_page.dart';
 import 'package:foodapin/features/user/detail_food/page/detail_food_page.dart';
 import 'package:foodapin/features/user/home/pages/home_page.dart';
 import 'package:foodapin/features/user/my_cart/pages/cart_page.dart';
@@ -87,6 +89,9 @@ class AppRoutes {
 
     case '/profile':
       return MaterialPageRoute(builder: (_) => const ProfilePage());
+    
+    case '/update-profile':
+      return MaterialPageRoute(builder: (_) => UpdateProfilePage(user: settings.arguments as Users));
 
     default:
       return MaterialPageRoute(

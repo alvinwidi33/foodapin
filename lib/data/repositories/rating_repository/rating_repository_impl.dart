@@ -33,7 +33,7 @@ class RatingRepositoryImpl implements RatingRepository {
   }
 
   @override
-  Future<ApiResponse<FoodRating>> createRating({
+  Future<ApiResponse<void>> createRating({
     required String foodId,
     required int rating,
     required String review,
@@ -47,9 +47,8 @@ class RatingRepositoryImpl implements RatingRepository {
         },
       );
 
-      final rate = FoodRating.fromJson(res.data['data']);
       return ApiResponse.success(
-        rate,
+        null,
         statusCode: res.statusCode,
       );
     } on DioException catch (e) {

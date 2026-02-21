@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:foodapin/data/models/transaction.dart';
 
 abstract class CreateTransactionState extends Equatable {
   const CreateTransactionState();

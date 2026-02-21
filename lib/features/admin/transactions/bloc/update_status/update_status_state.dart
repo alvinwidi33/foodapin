@@ -13,12 +13,10 @@ class UpdateTransactionStatusInitial extends UpdateTransactionStatusState {}
 class UpdateTransactionStatusLoading extends UpdateTransactionStatusState {}
 
 class UpdateTransactionStatusSuccess extends UpdateTransactionStatusState {
-  final Transaction transaction;
-
-  const UpdateTransactionStatusSuccess(this.transaction);
+  const UpdateTransactionStatusSuccess();
 
   @override
-  List<Object?> get props => [transaction];
+  List<Object?> get props => [];
 }
 
 class UpdateTransactionStatusFailure extends UpdateTransactionStatusState {
