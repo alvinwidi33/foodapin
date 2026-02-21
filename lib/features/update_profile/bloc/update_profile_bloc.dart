@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
 import 'update_profile_event.dart';
 import 'update_profile_state.dart';
@@ -7,28 +8,49 @@ class UpdateProfileBloc
     extends Bloc<UpdateProfileEvent, UpdateProfileState> {
 
   final UserRepository userRepository;
+  final UploadRepository uploadRepository;
 
-  UpdateProfileBloc({required this.userRepository})
-      : super(UpdateProfileInitial()) {
-    on<SubmitUpdateProfile>(_onSubmitUpdateProfile);
-  }
+  UpdateProfileBloc({
+    required this.userRepository,
+    required this.uploadRepository,
+  }) : super(const UpdateProfileState()) {
 
-  Future<void> _onSubmitUpdateProfile(
-    SubmitUpdateProfile event,
-    Emitter<UpdateProfileState> emit,
-  ) async {
-    emit(UpdateProfileLoading());
+    on<UploadProfileImage>((event, emit) async {
+      emit(state.copyWith(isUploadingImage: true));
 
-    final response = await userRepository.updateProfile(event.user);
+      final result =
+          await uploadRepository.uploadImage(event.file);
 
-    if (response.success) {
-      emit(UpdateProfileSuccess());
-    } else {
-      emit(
-        UpdateProfileFailure(
-          response.message ?? 'Failed to update profile',
-        ),
-      );
-    }
+      if (result.success && result.data != null) {
+        emit(state.copyWith(
+          isUploadingImage: false,
+          imageUrl: result.data,
+        ));
+      } else {
+        emit(state.copyWith(
+          isUploadingImage: false,
+          errorMessage: result.message,
+        ));
+      }
+    });
+
+    on<SubmitUpdateProfile>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+
+      final result =
+          await userRepository.updateProfile(event.user);
+
+      if (result.success) {
+        emit(state.copyWith(
+          isLoading: false,
+          success: true,
+        ));
+      } else {
+        emit(state.copyWith(
+          isLoading: false,
+          errorMessage: result.message,
+        ));
+      }
+    });
   }
 }

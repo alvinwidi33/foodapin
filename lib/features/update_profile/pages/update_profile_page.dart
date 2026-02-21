@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foodapin/components/app_theme.dart';
 import 'package:foodapin/data/models/users.dart';
+import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'package:foodapin/data/repositories/user_repository/user_repository.dart';
 import 'package:foodapin/features/update_profile/bloc/update_profile_bloc.dart';
 import 'package:foodapin/features/update_profile/bloc/update_profile_event.dart';
 import 'package:foodapin/features/update_profile/bloc/update_profile_state.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateProfilePage extends StatelessWidget {
   final Users user;
@@ -15,7 +19,7 @@ class UpdateProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UpdateProfileBloc(userRepository: context.read<UserRepository>()),
+      create: (context) => UpdateProfileBloc(userRepository: context.read<UserRepository>(), uploadRepository: context.read<UploadRepository>()),
       child: _UpdateProfileView(user: user),
     );
   }
@@ -38,7 +42,10 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
   late final TextEditingController _phoneCtrl;
   late final TextEditingController _passwordCtrl;
   late final TextEditingController _passwordRepeatCtrl;
-
+final ImagePicker _picker = ImagePicker();
+XFile? _selectedImage;
+String? _uploadedImageUrl;
+bool _isUploadingImage = false;
   bool _obscurePassword = true;
   bool _obscurePasswordRepeat = true;
   bool _changePassword = false;
@@ -51,6 +58,7 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
     _phoneCtrl = TextEditingController(text: widget.user.phoneNumber);
     _passwordCtrl = TextEditingController();
     _passwordRepeatCtrl = TextEditingController();
+    
   }
 
   @override
@@ -71,7 +79,8 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
       name: _nameCtrl.text.trim(),
       email: _emailCtrl.text.trim(),
       phoneNumber: _phoneCtrl.text.trim(),
-      profilePictureUrl: widget.user.profilePictureUrl,
+        profilePictureUrl:
+            _uploadedImageUrl ?? widget.user.profilePictureUrl,      
       role: widget.user.role,
       password: _changePassword ? _passwordCtrl.text : '',
       passwordRepeat: _changePassword ? _passwordRepeatCtrl.text : '',
@@ -79,16 +88,49 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
 
     context.read<UpdateProfileBloc>().add(SubmitUpdateProfile(updated));
   }
+Future<void> _pickImage() async {
+  final XFile? image = await _picker.pickImage(
+    source: ImageSource.gallery,
+    maxWidth: 1024,
+    maxHeight: 1024,
+    imageQuality: 85,
+  );
 
+  if (image == null) return;
+
+  setState(() {
+    _selectedImage = image;
+    _uploadedImageUrl = null;
+  });
+
+  await _uploadImage(image);
+}
+
+Future<void> _uploadImage(XFile file) async {
+  setState(() => _isUploadingImage = true);
+
+  final uploadRepository = context.read<UploadRepository>();
+  final result = await uploadRepository.uploadImage(file);
+
+  setState(() => _isUploadingImage = false);
+
+  if (result.success && result.data != null) {
+    setState(() => _uploadedImageUrl = result.data);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(result.message ?? 'Upload failed')),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return BlocListener<UpdateProfileBloc, UpdateProfileState>(
       listener: (context, state) {
-        if (state is UpdateProfileSuccess) {
+        if (state.success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Profile berhasil diperbarui!',
+                'Profile updated!',
                 style: AppTheme.bodyStyle
                     .copyWith(color: AppTheme.white, fontSize: 14),
               ),
@@ -100,11 +142,11 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
             ),
           );
           Navigator.pop(context, true);
-        } else if (state is UpdateProfileFailure) {
+        } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                state.message,
+                state.errorMessage.toString(),
                 style: AppTheme.bodyStyle
                     .copyWith(color: AppTheme.white, fontSize: 14),
               ),
@@ -130,6 +172,47 @@ class _UpdateProfileViewState extends State<_UpdateProfileView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 24),
+                      Center(
+                        child: GestureDetector(
+                          onTap: _isUploadingImage ? null : _pickImage,
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
+                                backgroundImage: _selectedImage != null
+                                    ? FileImage(File(_selectedImage!.path))
+                                    : (_uploadedImageUrl != null
+                                        ? NetworkImage(_uploadedImageUrl!)
+                                        : (widget.user.profilePictureUrl.isNotEmpty
+                                            ? NetworkImage(widget.user.profilePictureUrl)
+                                            : null)) as ImageProvider?,
+                                child: (_selectedImage == null &&
+                                        _uploadedImageUrl == null &&
+                                        widget.user.profilePictureUrl.isEmpty)
+                                    ? Icon(Icons.person, size: 40, color: AppTheme.primary)
+                                    : null,
+                              ),
+                              if (_isUploadingImage)
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withValues(alpha: 0.4),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 24),
                       _sectionLabel('Personal Info'),
                       const SizedBox(height: 12),
@@ -450,7 +533,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UpdateProfileBloc, UpdateProfileState>(
       builder: (context, state) {
-        final isLoading = state is UpdateProfileLoading;
+        final isLoading = state.isLoading;
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(

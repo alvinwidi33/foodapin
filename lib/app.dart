@@ -158,7 +158,7 @@ Widget build(BuildContext context) {
               create: (context) => UpdateTransactionStatusBloc(transactionRepository: transactionRepository),
             ),
             BlocProvider<UpdateProfileBloc>(
-              create: (context) => UpdateProfileBloc(userRepository: userRepository),
+              create: (context) => UpdateProfileBloc(userRepository: userRepository, uploadRepository: uploadRepository),
             ),
           ],
             child: MaterialApp(
