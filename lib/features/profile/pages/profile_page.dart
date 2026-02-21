@@ -259,26 +259,12 @@ class _ProfileContent extends StatelessWidget {
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.arrow_back_ios_new,
-                        size: 18, color: AppTheme.white),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Text('Profile',
-                    style: AppTheme.headingStyle
-                        .copyWith(color: AppTheme.white)),
-              ],
+            child: Center(
+              child: Text(
+                'Profile',
+                style: AppTheme.headingStyle
+                    .copyWith(color: AppTheme.white),
+              ),
             ),
           ),
         ),

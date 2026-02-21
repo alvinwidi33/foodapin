@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:foodapin/data/models/users.dart';
 
 abstract class UpdateProfileEvent extends Equatable {
@@ -6,6 +7,15 @@ abstract class UpdateProfileEvent extends Equatable {
 
   @override
   List<Object?> get props => [];
+}
+
+class UploadProfileImage extends UpdateProfileEvent {
+  final XFile file;
+
+  const UploadProfileImage(this.file);
+
+  @override
+  List<Object?> get props => [file];
 }
 
 class SubmitUpdateProfile extends UpdateProfileEvent {
