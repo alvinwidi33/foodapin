@@ -8,6 +8,7 @@ import 'package:foodapin/data/repositories/transaction_repository/transaction_re
 import 'package:foodapin/data/repositories/upload_repository/upload_repository.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class TransactionDetailPage extends StatefulWidget {
   const TransactionDetailPage({super.key});
@@ -329,9 +330,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                 const SizedBox(height: 16),
                 Expanded(
                   child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                              color: AppTheme.primary))
+                      ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                       : _transaction == null
                           ? Center(
                               child: Column(
@@ -457,15 +456,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                                                           vertical: 16),
                                                 ),
                                                 child: _isUploading
-                                                    ? const SizedBox(
-                                                        height: 20,
-                                                        width: 20,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          color: AppTheme.white,
-                                                          strokeWidth: 2,
-                                                        ),
-                                                      )
+                                                    ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                                     : Text('Upload Payment Proof',
                                                         style:
                                                             AppTheme.buttonStyle),
@@ -514,9 +505,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
           if (_isLoading && _transaction != null)
             Container(
               color: Colors.black.withValues(alpha: 0.3),
-              child: const Center(
-                child: CircularProgressIndicator(color: AppTheme.primary),
-              ),
+              child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
             ),
         ],
       ),

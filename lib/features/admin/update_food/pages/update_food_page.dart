@@ -15,6 +15,8 @@ import 'package:foodapin/features/admin/update_food/bloc/update/update_food_stat
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:lottie/lottie.dart';
+
 class UpdateFoodPage extends StatelessWidget {
   const UpdateFoodPage({super.key});
 
@@ -49,8 +51,8 @@ class _UpdateFoodView extends StatelessWidget {
       body: BlocBuilder<DetailUpdateFoodBloc, DetailUpdateFoodState>(
         builder: (context, state) {
           if (state is DetailUpdateFoodLoading || state is DetailUpdateFoodInitial) {
-            return const SafeArea(
-              child: Center(child: CircularProgressIndicator(color: AppTheme.primary)),
+            return SafeArea(
+              child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
             );
           } else if (state is DetailUpdateFoodError) {
             return SafeArea(
@@ -395,11 +397,7 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
                                       padding: const EdgeInsets.symmetric(vertical: 16),
                                     ),
                                     child: isLoading
-                                        ? const SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: CircularProgressIndicator(color: AppTheme.white, strokeWidth: 2),
-                                          )
+                                        ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                                         : Text('Update Food', style: AppTheme.buttonStyle),
                                   ),
                                 );
@@ -461,7 +459,7 @@ class _UpdateFoodFormState extends State<_UpdateFoodForm> {
                     if (_isUploadingImage)
                       Container(
                         color: Colors.black.withValues(alpha: 0.45),
-                        child: const Center(child: CircularProgressIndicator(color: AppTheme.white)),
+                        child: Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true)),
                       )
                     else if (hasLocalImage && _uploadedImageUrl != null)
                       Positioned(

@@ -195,14 +195,7 @@ class _FoodsPageState extends State<FoodsPage> {
                             itemCount: state.visibleFoods.length + (state.isLoadingMore ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index >= state.visibleFoods.length) {
-                                return const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: CircularProgressIndicator(
-                                      color: AppTheme.primary,
-                                    ),
-                                  ),
-                                );
+                                return Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true));
                               }
                               
                               final food = state.visibleFoods[index];

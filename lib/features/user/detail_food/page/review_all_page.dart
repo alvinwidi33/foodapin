@@ -5,6 +5,7 @@ import 'package:foodapin/data/repositories/rating_repository/rating_repository.d
 import 'package:foodapin/features/user/detail_food/bloc/rating/rating_bloc.dart';
 import 'package:foodapin/features/user/detail_food/bloc/rating/rating_event.dart';
 import 'package:foodapin/features/user/detail_food/bloc/rating/rating_state.dart';
+import 'package:lottie/lottie.dart';
 
 class ReviewAllPage extends StatefulWidget {
   const ReviewAllPage({super.key});
@@ -132,14 +133,7 @@ class _ReviewAllPageState extends State<ReviewAllPage> {
                                       );
                                 },
                           child: isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
+                              ? Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true))
                               : const Text(
                                   "Submit",
                                   style: TextStyle(color: AppTheme.white),
@@ -156,7 +150,7 @@ class _ReviewAllPageState extends State<ReviewAllPage> {
                 Expanded(
                   child: () {
                     if (state is RatingLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: Lottie.asset('assets/loading.json', width: 200, height: 200, repeat: true));
                     }
 
                     if (state is RatingLoaded) {
